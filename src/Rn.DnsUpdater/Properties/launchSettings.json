@@ -11,7 +11,8 @@
       "commandName": "Docker",
       "environmentVariables": {
         "DnsUpdater:ConfigFile": "/data/config/dns.config.json"
-      }
+      },
+      "commandLineArgs": "-v D:/wrk/[docker]/DnsUpdater:/data"
     }
   }
 }

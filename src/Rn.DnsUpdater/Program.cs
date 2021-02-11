@@ -22,6 +22,7 @@ namespace Rn.DnsUpdater
             .AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>))
             .AddSingleton<IFileAbstraction, FileAbstraction>()
             .AddSingleton<IDirectoryAbstraction, DirectoryAbstraction>()
+            .AddSingleton<IEnvironmentAbstraction, EnvironmentAbstraction>()
             .AddHostedService<Worker>();
         });
   }
