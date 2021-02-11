@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Abstractions;
+using Rn.NetCore.Common.Helpers;
 using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater
@@ -26,6 +27,9 @@ namespace Rn.DnsUpdater
             .AddSingleton<IFileAbstraction, FileAbstraction>()
             .AddSingleton<IDirectoryAbstraction, DirectoryAbstraction>()
             .AddSingleton<IEnvironmentAbstraction, EnvironmentAbstraction>()
+            .AddSingleton<IPathAbstraction, PathAbstraction>()
+            .AddSingleton<IJsonHelper, JsonHelper>()
+            .AddSingleton<IDnsUpdaterConfigService, DnsUpdaterConfigService>()
             .AddHostedService<DnsUpdaterWorker>();
         });
 

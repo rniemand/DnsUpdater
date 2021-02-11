@@ -13,26 +13,21 @@ namespace Rn.DnsUpdater
   {
     private readonly ILoggerAdapter<DnsUpdaterWorker> _logger;
     private readonly IIpResolverService _resolverService;
+    private readonly IDnsUpdaterConfigService _configService;
 
     public DnsUpdaterWorker(
       ILoggerAdapter<DnsUpdaterWorker> logger,
       IIpResolverService resolverService,
       IFileAbstraction file,
       IEnvironmentAbstraction environment,
-      DnsUpdaterConfig config)
+      IPathAbstraction path,
+      IDnsUpdaterConfigService configService)
     {
       _logger = logger;
       _resolverService = resolverService;
+      _configService = configService;
 
 
-      if (file.Exists(config.ConfigFile))
-      {
-        _logger.Info(file.ReadAllText(config.ConfigFile));
-      }
-      else
-      {
-        _logger.Info("Unable to find configuration file");
-      }
 
       _logger.Info("CurrentDirectory: {d}", environment.CurrentDirectory);
 
