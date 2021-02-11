@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Rn.DnsUpdater.Services;
 
 namespace Rn.DnsUpdater
 {
@@ -14,7 +15,9 @@ namespace Rn.DnsUpdater
       Host.CreateDefaultBuilder(args)
         .ConfigureServices((hostContext, services) =>
         {
-          services.AddHostedService<Worker>();
+          services
+            .AddSingleton<IIpResolverService, IpResolverService>()
+            .AddHostedService<Worker>();
         });
   }
 }

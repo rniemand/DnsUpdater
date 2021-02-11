@@ -1,0 +1,5 @@
+﻿https://freedns.afraid.org/
+	-> https://freedns.afraid.org/dynamic/
+
+https://api.ipify.org/
+
