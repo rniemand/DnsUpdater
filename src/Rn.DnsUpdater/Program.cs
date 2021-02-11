@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Rn.DnsUpdater.Services;
+using Rn.NetCore.Common.Abstractions;
+using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater
 {
@@ -17,6 +19,9 @@ namespace Rn.DnsUpdater
         {
           services
             .AddSingleton<IIpResolverService, IpResolverService>()
+            .AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>))
+            .AddSingleton<IFileAbstraction, FileAbstraction>()
+            .AddSingleton<IDirectoryAbstraction, DirectoryAbstraction>()
             .AddHostedService<Worker>();
         });
   }
