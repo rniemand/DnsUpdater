@@ -11,13 +11,13 @@ using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater
 {
-  public class Worker : BackgroundService
+  public class DnsUpdaterWorker : BackgroundService
   {
-    private readonly ILoggerAdapter<Worker> _logger;
+    private readonly ILoggerAdapter<DnsUpdaterWorker> _logger;
     private readonly IIpResolverService _resolverService;
 
-    public Worker(
-      ILoggerAdapter<Worker> logger,
+    public DnsUpdaterWorker(
+      ILoggerAdapter<DnsUpdaterWorker> logger,
       IIpResolverService resolverService,
       IConfiguration configuration,
       IFileAbstraction file,
@@ -43,16 +43,6 @@ namespace Rn.DnsUpdater
         _logger.Info("Unable to find configuration file");
       }
 
-
-      // foreach (DictionaryEntry entry in Environment.GetEnvironmentVariables())
-      // {
-      //   _logger.Info("{key} = {value}", entry.Key, entry.Value);
-      // }
-
-      var environmentVariable = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
-      _logger.Info("environmentVariable: {e}", environmentVariable);
-
-      _logger.Info("AppDomainBaseDirectory: {d}", environment.AppDomainBaseDirectory);
       _logger.Info("CurrentDirectory: {d}", environment.CurrentDirectory);
 
     }

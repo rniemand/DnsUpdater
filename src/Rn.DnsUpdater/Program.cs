@@ -23,7 +23,7 @@ namespace Rn.DnsUpdater
             .AddSingleton<IFileAbstraction, FileAbstraction>()
             .AddSingleton<IDirectoryAbstraction, DirectoryAbstraction>()
             .AddSingleton<IEnvironmentAbstraction, EnvironmentAbstraction>()
-            .AddHostedService<Worker>();
+            .AddHostedService<DnsUpdaterWorker>();
         });
   }
 }
