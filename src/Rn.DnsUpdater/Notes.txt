@@ -6,4 +6,5 @@ https://api.ipify.org/
 
 Container Configuration
 
-	-v '/mnt/user/Code/DnsUpdater/':'/config':'rw'
+	-v '/mnt/user/Code/DnsUpdater/':'/data':'rw'
+	-e 'DnsUpdater:ConfigFile'='/data/config/dns.config.json'
