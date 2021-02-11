@@ -1,9 +1,7 @@
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Abstractions;
@@ -19,20 +17,13 @@ namespace Rn.DnsUpdater
     public DnsUpdaterWorker(
       ILoggerAdapter<DnsUpdaterWorker> logger,
       IIpResolverService resolverService,
-      IConfiguration configuration,
       IFileAbstraction file,
-      IEnvironmentAbstraction environment)
+      IEnvironmentAbstraction environment,
+      DnsUpdaterConfig config)
     {
       _logger = logger;
       _resolverService = resolverService;
 
-
-      var config = new DnsUpdaterConfig();
-      var configSection = configuration.GetSection("DnsUpdater");
-      if (configSection.Exists())
-      {
-        configSection.Bind(config);
-      }
 
       if (file.Exists(config.ConfigFile))
       {
