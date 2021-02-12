@@ -15,12 +15,13 @@ namespace Rn.DnsUpdater.Services
     DnsEntriesConfig DnsEntriesConfig { get; }
 
     List<DnsUpdaterEntry> GetEntriesNeedingUpdate();
+    void SaveConfigState();
   }
 
   public class DnsUpdaterConfigService : IDnsUpdaterConfigService
   {
-    public DnsUpdaterConfig CoreConfig { get; set; }
-    public DnsEntriesConfig DnsEntriesConfig { get; set; }
+    public DnsUpdaterConfig CoreConfig { get; private set; }
+    public DnsEntriesConfig DnsEntriesConfig { get; private set; }
 
     private readonly ILoggerAdapter<DnsUpdaterConfigService> _logger;
     private readonly IPathAbstraction _path;
@@ -28,6 +29,7 @@ namespace Rn.DnsUpdater.Services
     private readonly IFileAbstraction _file;
     private readonly IJsonHelper _jsonHelper;
     private readonly IDateTimeAbstraction _dateTime;
+    private readonly IEnvironmentAbstraction _environment;
 
     public DnsUpdaterConfigService(
       ILoggerAdapter<DnsUpdaterConfigService> logger,
@@ -36,6 +38,7 @@ namespace Rn.DnsUpdater.Services
       IFileAbstraction file,
       IJsonHelper jsonHelper,
       IDateTimeAbstraction dateTime,
+      IEnvironmentAbstraction environment,
       DnsUpdaterConfig config)
     {
       // TODO: [TESTS] (DnsUpdaterConfigService) Add tests
@@ -47,6 +50,7 @@ namespace Rn.DnsUpdater.Services
 
       // Load all required configuration
       CoreConfig = config;
+      _environment = environment;
       _dateTime = dateTime;
       DnsEntriesConfig = LoadConfiguration(config);
     }
@@ -63,8 +67,52 @@ namespace Rn.DnsUpdater.Services
         .ToList();
     }
 
+    public void SaveConfigState()
+    {
+      // TODO: [TESTS] (DnsUpdaterConfigService.SaveConfigState) Add tests
+      if (!ShiftConfigFiles())
+      {
+        _logger.Error("Unable to manage configuration files, quitting!");
+        _environment.Exit(10);
+      }
+
+      try
+      {
+        var configJson = _jsonHelper.SerializeObject(DnsEntriesConfig, true);
+        _file.WriteAllText(CoreConfig.ConfigFile, configJson);
+        _logger.Debug("Updated configuration file");
+      }
+      catch (Exception ex)
+      {
+        _logger.LogUnexpectedException(ex);
+        _environment.Exit(11);
+      }
+    }
+
 
     // Internal methods
+    private bool ShiftConfigFiles()
+    {
+      // TODO: [TESTS] (DnsUpdaterConfigService.ShiftConfigFiles) Add tests
+      try
+      {
+        var previousConfig = $"{CoreConfig.ConfigFile}.previous";
+
+        if(_file.Exists(previousConfig))
+          _file.Delete(previousConfig);
+
+        _file.Copy(CoreConfig.ConfigFile, previousConfig);
+        _file.Delete(CoreConfig.ConfigFile);
+
+        return true;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogUnexpectedException(ex);
+        return false;
+      }
+    }
+
     private static bool NeedsUpdating(DnsUpdaterEntry entry, DateTime now)
     {
       // TODO: [TESTS] (DnsUpdaterConfigService.NeedsUpdating) Add tests
