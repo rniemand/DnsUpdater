@@ -8,3 +8,9 @@ Container Configuration
 
 	-v '/mnt/user/Code/DnsUpdater/':'/data':'rw'
 	-e 'DnsUpdater:ConfigFile'='/data/config/dns.config.json'
+
+	RnCore:Metrics:Enabled = true
+	RnCore:Metrics:DevelopmentMode = false
+  RnCore:Metrics:RabbitOutput:Username = xxx
+  RnCore:Metrics:RabbitOutput:Password = xxx
+  RnCore:Metrics:RabbitOutput:Host = xxx
