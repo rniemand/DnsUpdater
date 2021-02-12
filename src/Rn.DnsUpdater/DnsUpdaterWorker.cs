@@ -5,8 +5,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Rn.DnsUpdater.Config;
+using Rn.DnsUpdater.Enums;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Logging;
+using Rn.NetCore.Common.Metrics;
+using Rn.NetCore.Common.Metrics.Builders;
 
 namespace Rn.DnsUpdater
 {
@@ -16,17 +19,20 @@ namespace Rn.DnsUpdater
     private readonly IHostIpAddressService _addressService;
     private readonly IDnsUpdaterConfigService _configService;
     private readonly IDnsUpdaterService _dnsUpdater;
+    private readonly IMetricService _metrics;
 
     public DnsUpdaterWorker(
       ILoggerAdapter<DnsUpdaterWorker> logger,
       IHostIpAddressService addressService,
       IDnsUpdaterConfigService configService,
-      IDnsUpdaterService dnsUpdater)
+      IDnsUpdaterService dnsUpdater,
+      IMetricService metrics)
     {
       _logger = logger;
       _addressService = addressService;
       _configService = configService;
       _dnsUpdater = dnsUpdater;
+      _metrics = metrics;
     }
 
     // Required methods
@@ -63,12 +69,32 @@ namespace Rn.DnsUpdater
         : $"Updating {dnsEntries.Count} DNS entries"
       );
 
-      foreach (var dnsEntry in dnsEntries)
-      {
-        await _dnsUpdater.UpdateDnsEntry(dnsEntry, stoppingToken);
-      }
+      var builder = new ServiceMetricBuilder(nameof(DnsUpdaterWorker), nameof(UpdateDnsEntries))
+        .WithCategory(MetricCategory.DnsUpdater, MetricSubCategory.UpdateEntries)
+        .WithCustomInt1(dnsEntries.Count);
 
-      _configService.SaveConfigState();
+      try
+      {
+        using (builder.WithTiming())
+        {
+          foreach (var dnsEntry in dnsEntries)
+          {
+            builder.IncrementQueryCount();
+            await _dnsUpdater.UpdateDnsEntry(dnsEntry, stoppingToken);
+          }
+
+          _configService.SaveConfigState();
+        }
+      }
+      catch (Exception ex)
+      {
+        builder.WithException(ex);
+        _logger.LogUnexpectedException(ex);
+      }
+      finally
+      {
+        await _metrics.SubmitPointAsync(builder.Build());
+      }
     }
   }
 }
