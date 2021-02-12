@@ -23,7 +23,7 @@ namespace Rn.DnsUpdater
         {
           services
             .AddSingleton(GenerateConfig(hostContext))
-            .AddSingleton<IIpResolverService, IpResolverService>()
+            .AddSingleton<IHostIpAddressService, HostIpAddressService>()
             .AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>))
             .AddSingleton<IFileAbstraction, FileAbstraction>()
             .AddSingleton<IDirectoryAbstraction, DirectoryAbstraction>()

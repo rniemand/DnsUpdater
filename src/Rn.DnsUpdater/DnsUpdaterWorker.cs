@@ -13,18 +13,18 @@ namespace Rn.DnsUpdater
   public class DnsUpdaterWorker : BackgroundService
   {
     private readonly ILoggerAdapter<DnsUpdaterWorker> _logger;
-    private readonly IIpResolverService _resolverService;
+    private readonly IHostIpAddressService _addressService;
     private readonly IDnsUpdaterConfigService _configService;
     private readonly IDnsUpdaterService _dnsUpdater;
 
     public DnsUpdaterWorker(
       ILoggerAdapter<DnsUpdaterWorker> logger,
-      IIpResolverService resolverService,
+      IHostIpAddressService addressService,
       IDnsUpdaterConfigService configService,
       IDnsUpdaterService dnsUpdater)
     {
       _logger = logger;
-      _resolverService = resolverService;
+      _addressService = addressService;
       _configService = configService;
       _dnsUpdater = dnsUpdater;
     }
@@ -35,7 +35,8 @@ namespace Rn.DnsUpdater
       // TODO: [TESTS] (DnsUpdaterWorker.ExecuteAsync) Add tests
       while (!stoppingToken.IsCancellationRequested)
       {
-        // var rawIpAddress = await _resolverService.GetIpAddress(stoppingToken);
+        var hostAddressChanged = await _addressService.HostAddressChanged();
+
         var dnsEntries = _configService.GetEntriesNeedingUpdate();
         
         await UpdateDnsEntries(dnsEntries);

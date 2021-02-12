@@ -31,11 +31,11 @@ namespace Rn.DnsUpdater.Services
     }
 
 
-    // Interface
+    // Interface methods
     public async Task UpdateDnsEntry(DnsUpdaterEntry entry)
     {
       // TODO: [TESTS] (DnsUpdaterService.UpdateDnsEntry) Add tests
-      // Update the DnsEntry
+      // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
       switch (entry.Type)
       {
         case DnsType.FreeDns:
@@ -50,6 +50,7 @@ namespace Rn.DnsUpdater.Services
       // Set the next update time
       entry.NextUpdate = _dateTime.Now.AddSeconds(entry.UpdateIntervalSec);
     }
+
 
     // Internal methods
     private void HandleMissingUpdater(DnsUpdaterEntry entry)
@@ -72,7 +73,7 @@ namespace Rn.DnsUpdater.Services
 
         _logger.Info("Update response for {entryName}: ({code}) {body}",
           entry.Name,
-          (int) response.StatusCode,
+          (int)response.StatusCode,
           responseBody
         );
       }
