@@ -3,11 +3,6 @@ using Newtonsoft.Json;
 
 namespace Rn.DnsUpdater.Config
 {
-  public class DnsUpdaterEntry
-  {
-
-  }
-
   public class DnsEntriesConfig
   {
     [JsonProperty("entries"), JsonPropertyName("entries")]

@@ -2,9 +2,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Services;
-using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater
@@ -18,9 +16,6 @@ namespace Rn.DnsUpdater
     public DnsUpdaterWorker(
       ILoggerAdapter<DnsUpdaterWorker> logger,
       IIpResolverService resolverService,
-      IFileAbstraction file,
-      IEnvironmentAbstraction environment,
-      IPathAbstraction path,
       IDnsUpdaterConfigService configService)
     {
       _logger = logger;
@@ -29,7 +24,7 @@ namespace Rn.DnsUpdater
 
 
 
-      _logger.Info("CurrentDirectory: {d}", environment.CurrentDirectory);
+      _logger.Info("Count of entries: {c}", _configService.DnsEntriesConfig.Entries.Length);
 
     }
 
