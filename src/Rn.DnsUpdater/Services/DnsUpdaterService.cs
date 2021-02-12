@@ -4,8 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
+using Rn.DnsUpdater.Metrics;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Logging;
+using Rn.NetCore.Common.Metrics;
 using Rn.NetCore.Common.Services;
 
 namespace Rn.DnsUpdater.Services
@@ -20,18 +22,21 @@ namespace Rn.DnsUpdater.Services
     private readonly ILoggerAdapter<DnsUpdaterService> _logger;
     private readonly IDateTimeAbstraction _dateTime;
     private readonly IBasicHttpService _httpService;
+    private readonly IMetricService _metrics;
     private readonly DnsUpdaterConfig _config;
 
     public DnsUpdaterService(
       ILoggerAdapter<DnsUpdaterService> logger,
       IDateTimeAbstraction dateTime,
       IBasicHttpService httpService,
+      IMetricService metrics,
       DnsUpdaterConfig config)
     {
       _logger = logger;
       _dateTime = dateTime;
       _httpService = httpService;
       _config = config;
+      _metrics = metrics;
     }
 
 
@@ -68,23 +73,36 @@ namespace Rn.DnsUpdater.Services
     private async Task UpdateFreeDnsEntry(DnsUpdaterEntry entry, CancellationToken stoppingToken)
     {
       // TODO: [TESTS] (DnsUpdaterService.UpdateFreeDnsEntry) Add tests
+      var builder = new UpdateDnsEntryMetricBuilder()
+        .WithCategory(MetricCategory.DnsUpdater, MetricSubCategory.UpdateEntry)
+        .ForDnsEntry(entry);
+
       try
       {
-        var updateUrl = entry.GetConfig(ConfigKeys.Url);
-        var timeoutMs = entry.GetIntConfig(ConfigKeys.TimeoutMs, _config.DefaultHttpTimeoutMs);
-        var request = new HttpRequestMessage(HttpMethod.Get, updateUrl);
-        var response = await _httpService.SendAsync(request, stoppingToken, timeoutMs);
-        var responseBody = await response.Content.ReadAsStringAsync(stoppingToken);
+        using (builder.WithTiming())
+        {
+          var updateUrl = entry.GetConfig(ConfigKeys.Url);
+          var timeoutMs = entry.GetIntConfig(ConfigKeys.TimeoutMs, _config.DefaultHttpTimeoutMs);
+          var request = new HttpRequestMessage(HttpMethod.Get, updateUrl);
+          var response = await _httpService.SendAsync(request, stoppingToken, timeoutMs);
+          var responseBody = await response.Content.ReadAsStringAsync(stoppingToken);
+          builder.WithResponse(response);
 
-        _logger.Info("Update response for {entryName}: ({code}) {body}",
-          entry.Name,
-          (int) response.StatusCode,
-          responseBody
-        );
+          _logger.Info("Update response for {entryName}: ({code}) {body}",
+            entry.Name,
+            (int) response.StatusCode,
+            responseBody
+          );
+        }
       }
       catch (Exception ex)
       {
         _logger.LogUnexpectedException(ex);
+        builder.WithException(ex);
+      }
+      finally
+      {
+        await _metrics.SubmitPointAsync(builder.Build());
       }
     }
   }

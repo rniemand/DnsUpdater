@@ -3,5 +3,6 @@
   public static class MetricSubCategory
   {
     public const string UpdateEntries = "UpdateEntries";
+    public const string UpdateEntry = "UpdateEntry";
   }
 }
