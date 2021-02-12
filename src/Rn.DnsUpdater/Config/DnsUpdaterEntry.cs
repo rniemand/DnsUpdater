@@ -11,6 +11,9 @@ namespace Rn.DnsUpdater.Config
     [JsonProperty("enabled"), JsonPropertyName("enabled")]
     public bool Enabled { get; set; }
 
+    [JsonProperty("name"), JsonPropertyName("name")]
+    public string Name { get; set; }
+
     [JsonProperty("nextUpdate"), JsonPropertyName("nextUpdate")]
     public DateTime? NextUpdate { get; set; }
 
@@ -30,9 +33,18 @@ namespace Rn.DnsUpdater.Config
       // TODO: [TESTS] (DnsUpdaterEntry) Add tests
       Enabled = false;
       NextUpdate = null;
+      Name = string.Empty;
       Type = DnsType.Unspecified;
       UpdateIntervalSec = 60 * 60 * 12;
       Config = new Dictionary<string, string>();
+    }
+
+
+    // Helper methods
+    public string GetConfig(string key, string fallback = null)
+    {
+      // TODO: [TESTS] (DnsUpdaterEntry.GetConfig) Add tests
+      return !Config.ContainsKey(key) ? fallback : Config[key];
     }
   }
 }
