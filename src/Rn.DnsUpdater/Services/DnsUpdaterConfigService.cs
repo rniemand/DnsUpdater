@@ -15,6 +15,7 @@ namespace Rn.DnsUpdater.Services
     DnsEntriesConfig DnsEntriesConfig { get; }
 
     List<DnsUpdaterEntry> GetEntriesNeedingUpdate();
+    List<DnsUpdaterEntry> GetEnabledEntries();
     void SaveConfigState();
   }
 
@@ -65,6 +66,12 @@ namespace Rn.DnsUpdater.Services
       return DnsEntriesConfig.Entries
         .Where(e => NeedsUpdating(e, now))
         .ToList();
+    }
+
+    public List<DnsUpdaterEntry> GetEnabledEntries()
+    {
+      // TODO: [TESTS] (DnsUpdaterConfigService.GetEnabledEntries) Add tests
+      return DnsEntriesConfig.Entries.Where(e => e.Enabled).ToList();
     }
 
     public void SaveConfigState()

@@ -35,18 +35,23 @@ namespace Rn.DnsUpdater
       // TODO: [TESTS] (DnsUpdaterWorker.ExecuteAsync) Add tests
       while (!stoppingToken.IsCancellationRequested)
       {
-        var hostAddressChanged = await _addressService.HostAddressChanged();
+        var hostAddressChanged = await _addressService.HostAddressChanged(stoppingToken);
 
-        var dnsEntries = _configService.GetEntriesNeedingUpdate();
-        
-        await UpdateDnsEntries(dnsEntries);
+        // Decide if we need to update all entries, or just a smaller subset
+        var dnsEntries = hostAddressChanged
+          ? _configService.GetEnabledEntries()
+          : _configService.GetEntriesNeedingUpdate();
 
+        // Update any DnsEntries returned above
+        await UpdateDnsEntries(dnsEntries, stoppingToken);
+
+        // Wait for the next loop
         await Task.Delay(_configService.CoreConfig.TickInterval, stoppingToken);
       }
     }
 
     // Updater methods
-    private async Task UpdateDnsEntries(IReadOnlyCollection<DnsUpdaterEntry> dnsEntries)
+    private async Task UpdateDnsEntries(IReadOnlyCollection<DnsUpdaterEntry> dnsEntries, CancellationToken stoppingToken)
     {
       // TODO: [TESTS] (DnsUpdaterWorker.UpdateDnsEntries) Add tests
       // Ensure that we have something to work with
@@ -60,7 +65,7 @@ namespace Rn.DnsUpdater
 
       foreach (var dnsEntry in dnsEntries)
       {
-        await _dnsUpdater.UpdateDnsEntry(dnsEntry);
+        await _dnsUpdater.UpdateDnsEntry(dnsEntry, stoppingToken);
       }
 
       _configService.SaveConfigState();

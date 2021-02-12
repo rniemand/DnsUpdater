@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
@@ -11,7 +12,7 @@ namespace Rn.DnsUpdater.Services
 {
   public interface IDnsUpdaterService
   {
-    Task UpdateDnsEntry(DnsUpdaterEntry entry);
+    Task UpdateDnsEntry(DnsUpdaterEntry entry, CancellationToken stoppingToken);
   }
 
   public class DnsUpdaterService : IDnsUpdaterService
@@ -32,14 +33,14 @@ namespace Rn.DnsUpdater.Services
 
 
     // Interface methods
-    public async Task UpdateDnsEntry(DnsUpdaterEntry entry)
+    public async Task UpdateDnsEntry(DnsUpdaterEntry entry, CancellationToken stoppingToken)
     {
       // TODO: [TESTS] (DnsUpdaterService.UpdateDnsEntry) Add tests
       // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
       switch (entry.Type)
       {
         case DnsType.FreeDns:
-          await UpdateFreeDnsEntry(entry);
+          await UpdateFreeDnsEntry(entry, stoppingToken);
           break;
 
         default:
@@ -61,15 +62,15 @@ namespace Rn.DnsUpdater.Services
       );
     }
 
-    private async Task UpdateFreeDnsEntry(DnsUpdaterEntry entry)
+    private async Task UpdateFreeDnsEntry(DnsUpdaterEntry entry, CancellationToken stoppingToken)
     {
       // TODO: [TESTS] (DnsUpdaterService.UpdateFreeDnsEntry) Add tests
       try
       {
         var updateUrl = entry.GetConfig(ConfigKeys.Url);
         var request = new HttpRequestMessage(HttpMethod.Get, updateUrl);
-        var response = await _httpService.SendAsync(request);
-        var responseBody = await response.Content.ReadAsStringAsync();
+        var response = await _httpService.SendAsync(request, stoppingToken);
+        var responseBody = await response.Content.ReadAsStringAsync(stoppingToken);
 
         _logger.Info("Update response for {entryName}: ({code}) {body}",
           entry.Name,
