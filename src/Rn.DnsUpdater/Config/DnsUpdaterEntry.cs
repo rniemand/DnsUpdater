@@ -46,5 +46,14 @@ namespace Rn.DnsUpdater.Config
       // TODO: [TESTS] (DnsUpdaterEntry.GetConfig) Add tests
       return !Config.ContainsKey(key) ? fallback : Config[key];
     }
+
+    public int GetIntConfig(string key, int fallback)
+    {
+      // TODO: [TESTS] (DnsUpdaterEntry.GetIntConfig) Add tests
+      if (!Config.ContainsKey(key))
+        return fallback;
+
+      return int.TryParse(Config[key], out var parsed) ? parsed : fallback;
+    }
   }
 }

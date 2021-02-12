@@ -14,12 +14,16 @@ namespace Rn.DnsUpdater.Config
     [JsonProperty("UpdateHostIpIntervalMin"), JsonPropertyName("UpdateHostIpIntervalMin")]
     public int UpdateHostIpIntervalMin { get; set; }
 
+    [JsonProperty("DefaultHttpTimeoutMs"), JsonPropertyName("DefaultHttpTimeoutMs")]
+    public int DefaultHttpTimeoutMs { get; set; }
+
     public DnsUpdaterConfig()
     {
       // TODO: [TESTS] (DnsUpdaterConfig.DnsUpdaterConfig) Add tests
       ConfigFile = "./dns.config.json";
       TickInterval = 5000;
       UpdateHostIpIntervalMin = 10;
+      DefaultHttpTimeoutMs = 5000;
     }
   }
 }

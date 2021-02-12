@@ -78,9 +78,16 @@ namespace Rn.DnsUpdater.Services
 
       try
       {
-        _logger.Info("Refreshing hosts IP Address");
-        var request = new HttpRequestMessage(HttpMethod.Get, "https://api64.ipify.org/");
-        var response = await _httpService.SendAsync(request, stoppingToken);
+        const string requestUri = "https://api64.ipify.org/";
+        var timeoutMs = _config.DefaultHttpTimeoutMs;
+
+        _logger.Info("Refreshing hosts IP Address ({url}) timeout = {timeout} ms",
+          requestUri,
+          timeoutMs
+        );
+
+        var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+        var response = await _httpService.SendAsync(request, stoppingToken, timeoutMs);
         var hostIpAddress = await response.Content.ReadAsStringAsync(stoppingToken);
 
         if (!string.IsNullOrWhiteSpace(hostIpAddress))

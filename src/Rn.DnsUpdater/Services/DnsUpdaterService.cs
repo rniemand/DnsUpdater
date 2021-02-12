@@ -20,15 +20,18 @@ namespace Rn.DnsUpdater.Services
     private readonly ILoggerAdapter<DnsUpdaterService> _logger;
     private readonly IDateTimeAbstraction _dateTime;
     private readonly IBasicHttpService _httpService;
+    private readonly DnsUpdaterConfig _config;
 
     public DnsUpdaterService(
       ILoggerAdapter<DnsUpdaterService> logger,
       IDateTimeAbstraction dateTime,
-      IBasicHttpService httpService)
+      IBasicHttpService httpService,
+      DnsUpdaterConfig config)
     {
       _logger = logger;
       _dateTime = dateTime;
       _httpService = httpService;
+      _config = config;
     }
 
 
@@ -68,13 +71,14 @@ namespace Rn.DnsUpdater.Services
       try
       {
         var updateUrl = entry.GetConfig(ConfigKeys.Url);
+        var timeoutMs = entry.GetIntConfig(ConfigKeys.TimeoutMs, _config.DefaultHttpTimeoutMs);
         var request = new HttpRequestMessage(HttpMethod.Get, updateUrl);
-        var response = await _httpService.SendAsync(request, stoppingToken);
+        var response = await _httpService.SendAsync(request, stoppingToken, timeoutMs);
         var responseBody = await response.Content.ReadAsStringAsync(stoppingToken);
 
         _logger.Info("Update response for {entryName}: ({code}) {body}",
           entry.Name,
-          (int)response.StatusCode,
+          (int) response.StatusCode,
           responseBody
         );
       }
