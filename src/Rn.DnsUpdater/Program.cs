@@ -6,7 +6,10 @@ using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Helpers;
 using Rn.NetCore.Common.Logging;
+using Rn.NetCore.Common.Metrics;
+using Rn.NetCore.Common.Metrics.Interfaces;
 using Rn.NetCore.Common.Services;
+using Rn.NetCore.Metrics.Rabbit;
 
 namespace Rn.DnsUpdater
 {
@@ -34,6 +37,12 @@ namespace Rn.DnsUpdater
             .AddSingleton<IBasicHttpService, BasicHttpService>()
             .AddSingleton<IDnsUpdaterService, DnsUpdaterService>()
             .AddSingleton<IDnsUpdaterConfigService, DnsUpdaterConfigService>()
+            // Metrics
+            .AddSingleton<IMetricService, MetricService>()
+            .AddSingleton<IMetricOutput, RabbitMetricOutput>()
+            .AddSingleton<IRabbitConnection, RabbitConnection>()
+            .AddSingleton<IRabbitFactory, RabbitFactory>()
+            // Workers
             .AddHostedService<DnsUpdaterWorker>();
         });
 
