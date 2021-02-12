@@ -37,6 +37,7 @@ namespace Rn.DnsUpdater
             .AddSingleton<IBasicHttpService, BasicHttpService>()
             .AddSingleton<IDnsUpdaterService, DnsUpdaterService>()
             .AddSingleton<IDnsUpdaterConfigService, DnsUpdaterConfigService>()
+            .AddSingleton<IHeartbeatService, HeartbeatService>()
             // Metrics
             .AddSingleton<IMetricService, MetricService>()
             .AddSingleton<IMetricOutput, RabbitMetricOutput>()

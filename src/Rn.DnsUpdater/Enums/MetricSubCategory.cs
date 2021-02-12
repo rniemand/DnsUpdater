@@ -4,5 +4,6 @@
   {
     public const string UpdateEntries = "UpdateEntries";
     public const string UpdateEntry = "UpdateEntry";
+    public const string Tick = "Tick";
   }
 }

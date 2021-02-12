@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Rn.DnsUpdater.Config;
@@ -19,6 +18,7 @@ namespace Rn.DnsUpdater
     private readonly IHostIpAddressService _addressService;
     private readonly IDnsUpdaterConfigService _configService;
     private readonly IDnsUpdaterService _dnsUpdater;
+    private readonly IHeartbeatService _heartbeatService;
     private readonly IMetricService _metrics;
 
     public DnsUpdaterWorker(
@@ -26,13 +26,15 @@ namespace Rn.DnsUpdater
       IHostIpAddressService addressService,
       IDnsUpdaterConfigService configService,
       IDnsUpdaterService dnsUpdater,
-      IMetricService metrics)
+      IMetricService metrics,
+      IHeartbeatService heartbeatService)
     {
       _logger = logger;
       _addressService = addressService;
       _configService = configService;
       _dnsUpdater = dnsUpdater;
       _metrics = metrics;
+      _heartbeatService = heartbeatService;
     }
 
     // Required methods
@@ -41,6 +43,7 @@ namespace Rn.DnsUpdater
       // TODO: [TESTS] (DnsUpdaterWorker.ExecuteAsync) Add tests
       while (!stoppingToken.IsCancellationRequested)
       {
+        await _heartbeatService.Tick();
         var hostAddressChanged = await _addressService.HostAddressChanged(stoppingToken);
 
         // Decide if we need to update all entries, or just a smaller subset
