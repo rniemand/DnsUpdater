@@ -21,16 +21,15 @@ namespace Rn.DnsUpdater
       _logger = logger;
       _resolverService = resolverService;
       _configService = configService;
-
-
-
-      _logger.Info("Count of entries: {c}", _configService.DnsEntriesConfig.Entries.Length);
-
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-      var rawIpAddress = await _resolverService.GetIpAddress(stoppingToken);
+      // var rawIpAddress = await _resolverService.GetIpAddress(stoppingToken);
+      var rawIpAddress = ":P";
+
+      var entries = _configService.GetEntriesNeedingUpdate();
+
 
       while (!stoppingToken.IsCancellationRequested)
       {
@@ -40,7 +39,7 @@ namespace Rn.DnsUpdater
           rawIpAddress
         );
 
-        await Task.Delay(5000, stoppingToken);
+        await Task.Delay(_configService.CoreConfig.TickInterval, stoppingToken);
       }
     }
   }

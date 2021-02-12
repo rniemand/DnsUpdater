@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
 using Rn.NetCore.Common.Abstractions;
@@ -11,6 +13,8 @@ namespace Rn.DnsUpdater.Services
   {
     DnsUpdaterConfig CoreConfig { get; }
     DnsEntriesConfig DnsEntriesConfig { get; }
+
+    List<DnsUpdaterEntry> GetEntriesNeedingUpdate();
   }
 
   public class DnsUpdaterConfigService : IDnsUpdaterConfigService
@@ -23,6 +27,7 @@ namespace Rn.DnsUpdater.Services
     private readonly IDirectoryAbstraction _directory;
     private readonly IFileAbstraction _file;
     private readonly IJsonHelper _jsonHelper;
+    private readonly IDateTimeAbstraction _dateTime;
 
     public DnsUpdaterConfigService(
       ILoggerAdapter<DnsUpdaterConfigService> logger,
@@ -30,6 +35,7 @@ namespace Rn.DnsUpdater.Services
       IDirectoryAbstraction directory,
       IFileAbstraction file,
       IJsonHelper jsonHelper,
+      IDateTimeAbstraction dateTime,
       DnsUpdaterConfig config)
     {
       // TODO: [TESTS] (DnsUpdaterConfigService) Add tests
@@ -41,11 +47,36 @@ namespace Rn.DnsUpdater.Services
 
       // Load all required configuration
       CoreConfig = config;
+      _dateTime = dateTime;
       DnsEntriesConfig = LoadConfiguration(config);
     }
 
 
+    // Interface methods
+    public List<DnsUpdaterEntry> GetEntriesNeedingUpdate()
+    {
+      // TODO: [TESTS] (DnsUpdaterConfigService.GetEntriesNeedingUpdate) Add tests
+      var now = _dateTime.Now;
+
+      return DnsEntriesConfig.Entries
+        .Where(e => NeedsUpdating(e, now))
+        .ToList();
+    }
+
+
     // Internal methods
+    private static bool NeedsUpdating(DnsUpdaterEntry entry, DateTime now)
+    {
+      // TODO: [TESTS] (DnsUpdaterConfigService.NeedsUpdating) Add tests
+      if (entry.Enabled == false)
+        return false;
+
+      if (!entry.NextUpdate.HasValue)
+        return true;
+
+      return !(entry.NextUpdate > now);
+    }
+
     private DnsEntriesConfig LoadConfiguration(DnsUpdaterConfig config)
     {
       // TODO: [TESTS] (DnsUpdaterConfigService.LoadConfiguration) Add tests
@@ -82,6 +113,7 @@ namespace Rn.DnsUpdater.Services
           {
             Type = DnsType.FreeDns,
             Enabled = false,
+            NextUpdate = null,
             Config = new Dictionary<string, string>
             {
               {ConfigKeys.Url, "http://foobar.com"}

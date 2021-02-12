@@ -17,6 +17,9 @@ namespace Rn.DnsUpdater.Config
     [JsonProperty("type"), JsonPropertyName("type")]
     public DnsType Type { get; set; }
 
+    [JsonProperty("UpdateIntervalSec"), JsonPropertyName("UpdateIntervalSec")]
+    public int UpdateIntervalSec { get; set; }
+
     [JsonProperty("config"), JsonPropertyName("config")]
     public Dictionary<string, string> Config { get; set; }
 
@@ -28,6 +31,7 @@ namespace Rn.DnsUpdater.Config
       Enabled = false;
       NextUpdate = null;
       Type = DnsType.Unspecified;
+      UpdateIntervalSec = 60 * 60 * 12;
       Config = new Dictionary<string, string>();
     }
   }

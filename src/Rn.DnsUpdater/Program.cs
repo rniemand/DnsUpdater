@@ -6,6 +6,7 @@ using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Helpers;
 using Rn.NetCore.Common.Logging;
+using Rn.NetCore.Common.Services;
 
 namespace Rn.DnsUpdater
 {
@@ -28,7 +29,10 @@ namespace Rn.DnsUpdater
             .AddSingleton<IDirectoryAbstraction, DirectoryAbstraction>()
             .AddSingleton<IEnvironmentAbstraction, EnvironmentAbstraction>()
             .AddSingleton<IPathAbstraction, PathAbstraction>()
+            .AddSingleton<IDateTimeAbstraction, DateTimeAbstraction>()
             .AddSingleton<IJsonHelper, JsonHelper>()
+            .AddSingleton<IBasicHttpService, BasicHttpService>()
+            .AddSingleton<IDnsUpdaterService, DnsUpdaterService>()
             .AddSingleton<IDnsUpdaterConfigService, DnsUpdaterConfigService>()
             .AddHostedService<DnsUpdaterWorker>();
         });
