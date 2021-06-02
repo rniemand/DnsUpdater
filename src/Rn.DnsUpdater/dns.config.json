@@ -1,0 +1,14 @@
+{
+  "entries": [
+    {
+      "enabled": false,
+      "name": "",
+      "nextUpdate": null,
+      "type": 1,
+      "UpdateIntervalSec": 43200,
+      "config": {
+        "Url": "http://foobar.com"
+      }
+    }
+  ]
+}
