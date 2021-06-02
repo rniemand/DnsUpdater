@@ -95,7 +95,8 @@ namespace Rn.DnsUpdater.Services
       {
         using (builder.WithTiming())
         {
-          const string url = "https://api64.ipify.org/";
+          //const string url = "https://api64.ipify.org/";
+          const string url = "https://api.ipify.org/";
           var timeout = _config.DefaultHttpTimeoutMs;
           
           _logger.Info("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
