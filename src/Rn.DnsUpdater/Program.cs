@@ -13,7 +13,9 @@ using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Common.Metrics;
 using Rn.NetCore.Common.Metrics.Interfaces;
 using Rn.NetCore.Common.Services;
+using Rn.NetCore.Common.Wrappers;
 using Rn.NetCore.Metrics.Rabbit;
+using Rn.NetCore.Metrics.Rabbit.Interfaces;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Rn.DnsUpdater
@@ -50,7 +52,7 @@ namespace Rn.DnsUpdater
             .AddSingleton<IFileAbstraction, FileAbstraction>()
             .AddSingleton<IDirectoryAbstraction, DirectoryAbstraction>()
             .AddSingleton<IEnvironmentAbstraction, EnvironmentAbstraction>()
-            .AddSingleton<IPathAbstraction, PathAbstraction>()
+            .AddSingleton<IPath, PathWrapper>()
             .AddSingleton<IDateTimeAbstraction, DateTimeAbstraction>()
             .AddSingleton<IJsonHelper, JsonHelper>()
             .AddSingleton<IBasicHttpService, BasicHttpService>()
