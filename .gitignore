@@ -17,6 +17,8 @@ docker/rabbitmq/data/
 *.userprefs
 
 # Build results
+artifacts/
+tools/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
