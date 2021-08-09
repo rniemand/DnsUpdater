@@ -8,8 +8,8 @@ using Rn.DnsUpdater.Metrics;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Common.Metrics;
 using Rn.NetCore.Common.Metrics.Builders;
+using Rn.NetCore.Common.Metrics.Interfaces;
 using Rn.NetCore.Common.Services;
 
 namespace Rn.DnsUpdater.Services
@@ -128,7 +128,7 @@ namespace Rn.DnsUpdater.Services
       }
       finally
       {
-        await _metrics.SubmitPointAsync(builder.Build());
+        await _metrics.SubmitBuilderAsync(builder);
       }
     }
   }

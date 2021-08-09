@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Rn.DnsUpdater.Enums;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Common.Metrics;
 using Rn.NetCore.Common.Metrics.Builders;
+using Rn.NetCore.Common.Metrics.Interfaces;
 
 namespace Rn.DnsUpdater.Services
 {
@@ -48,10 +48,10 @@ namespace Rn.DnsUpdater.Services
         var runningTime = (_dateTime.Now - _startTime);
         _logger.Debug("Heartbeat - running for {time}", runningTime.ToString("g"));
 
-        await _metrics.SubmitPointAsync(new ServiceMetricBuilder(nameof(HeartbeatService), nameof(Tick))
+        await _metrics.SubmitBuilderAsync(new ServiceMetricBuilder(nameof(HeartbeatService), nameof(Tick))
           .WithCategory(MetricCategory.Heartbeat, MetricSubCategory.Tick)
           .WithCustomLong1((long) runningTime.TotalSeconds)
-          .Build());
+        );
       }
       catch (Exception ex)
       {

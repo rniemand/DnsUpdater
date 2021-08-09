@@ -7,8 +7,8 @@ using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Common.Metrics;
 using Rn.NetCore.Common.Metrics.Builders;
+using Rn.NetCore.Common.Metrics.Interfaces;
 
 namespace Rn.DnsUpdater
 {
@@ -96,7 +96,7 @@ namespace Rn.DnsUpdater
       }
       finally
       {
-        await _metrics.SubmitPointAsync(builder.Build());
+        await _metrics.SubmitBuilderAsync(builder);
       }
     }
   }
