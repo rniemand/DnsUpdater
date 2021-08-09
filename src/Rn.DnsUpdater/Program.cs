@@ -59,11 +59,14 @@ namespace Rn.DnsUpdater
             .AddSingleton<IDnsUpdaterService, DnsUpdaterService>()
             .AddSingleton<IDnsUpdaterConfigService, DnsUpdaterConfigService>()
             .AddSingleton<IHeartbeatService, HeartbeatService>()
+
             // Metrics
             .AddSingleton<IMetricService, MetricService>()
+            .AddSingleton<IMetricServiceUtils, MetricServiceUtils>()
             .AddSingleton<IMetricOutput, RabbitMetricOutput>()
             .AddSingleton<IRabbitConnection, RabbitConnection>()
             .AddSingleton<IRabbitFactory, RabbitFactory>()
+
             // Logging
             .AddLogging(loggingBuilder =>
             {
@@ -72,6 +75,7 @@ namespace Rn.DnsUpdater
               loggingBuilder.SetMinimumLevel(LogLevel.Trace);
               loggingBuilder.AddNLog(hostContext.Configuration);
             })
+
             // Workers
             .AddHostedService<DnsUpdaterWorker>();
         });
