@@ -30,7 +30,6 @@ namespace Rn.DnsUpdater.Config
     // Constructor
     public DnsUpdaterEntry()
     {
-      // TODO: [TESTS] (DnsUpdaterEntry) Add tests
       Enabled = false;
       NextUpdate = null;
       Name = string.Empty;

@@ -19,7 +19,6 @@ namespace Rn.DnsUpdater.Config
 
     public DnsUpdaterConfig()
     {
-      // TODO: [TESTS] (DnsUpdaterConfig.DnsUpdaterConfig) Add tests
       ConfigFile = "./dns.config.json";
       TickInterval = 5000;
       UpdateHostIpIntervalMin = 10;
