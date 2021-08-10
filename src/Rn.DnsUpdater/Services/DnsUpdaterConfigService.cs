@@ -6,7 +6,6 @@ using Rn.DnsUpdater.Enums;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Helpers;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Common.Wrappers;
 
 namespace Rn.DnsUpdater.Services
 {
@@ -26,7 +25,7 @@ namespace Rn.DnsUpdater.Services
     public DnsEntriesConfig DnsEntriesConfig { get; private set; }
 
     private readonly ILoggerAdapter<DnsUpdaterConfigService> _logger;
-    private readonly IPath _path;
+    private readonly IPathAbstraction _path;
     private readonly IDirectoryAbstraction _directory;
     private readonly IFileAbstraction _file;
     private readonly IJsonHelper _jsonHelper;
@@ -35,7 +34,7 @@ namespace Rn.DnsUpdater.Services
 
     public DnsUpdaterConfigService(
       ILoggerAdapter<DnsUpdaterConfigService> logger,
-      IPath path,
+      IPathAbstraction path,
       IDirectoryAbstraction directory,
       IFileAbstraction file,
       IJsonHelper jsonHelper,

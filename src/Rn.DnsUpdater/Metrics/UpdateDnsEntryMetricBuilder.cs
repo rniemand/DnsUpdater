@@ -36,7 +36,7 @@ namespace Rn.DnsUpdater.Metrics
 
     public void WithException(Exception ex) { }
 
-    public CoreMetric GetMetric() => null;
+    public CoreMetric Build() => null;
   }
 
   public class UpdateDnsEntryMetricBuilder : MetricBuilderBase, IUpdateDnsEntryMetricBuilder
@@ -114,7 +114,7 @@ namespace Rn.DnsUpdater.Metrics
 
 
     // Build()
-    public CoreMetric GetMetric()
+    public CoreMetric Build()
     {
       // TODO: [TESTS] (UpdateDnsEntryMetricBuilder.GetMetric) Add tests
       return CoreMetric;
