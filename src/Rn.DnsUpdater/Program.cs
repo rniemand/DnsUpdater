@@ -52,7 +52,7 @@ namespace Rn.DnsUpdater
             .AddSingleton<IFileAbstraction, FileAbstraction>()
             .AddSingleton<IDirectoryAbstraction, DirectoryAbstraction>()
             .AddSingleton<IEnvironmentAbstraction, EnvironmentAbstraction>()
-            .AddSingleton<IPath, PathWrapper>()
+            .AddSingleton<IPathAbstraction, PathAbstraction>()
             .AddSingleton<IDateTimeAbstraction, DateTimeAbstraction>()
             .AddSingleton<IJsonHelper, JsonHelper>()
             .AddSingleton<IBasicHttpService, BasicHttpService>()
