@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
 using Rn.NetCore.Common.Abstractions;
@@ -32,28 +33,21 @@ namespace Rn.DnsUpdater.Services
     private readonly IDateTimeAbstraction _dateTime;
     private readonly IEnvironmentAbstraction _environment;
 
-    public DnsUpdaterConfigService(
-      ILoggerAdapter<DnsUpdaterConfigService> logger,
-      IPathAbstraction path,
-      IDirectoryAbstraction directory,
-      IFileAbstraction file,
-      IJsonHelper jsonHelper,
-      IDateTimeAbstraction dateTime,
-      IEnvironmentAbstraction environment,
-      DnsUpdaterConfig config)
+    public DnsUpdaterConfigService(IServiceProvider serviceProvider)
     {
       // TODO: [TESTS] (DnsUpdaterConfigService) Add tests
-      _logger = logger;
-      _path = path;
-      _directory = directory;
-      _file = file;
-      _jsonHelper = jsonHelper;
+      _logger = serviceProvider.GetRequiredService<ILoggerAdapter<DnsUpdaterConfigService>>();
+      _path = serviceProvider.GetRequiredService<IPathAbstraction>();
+      _directory = serviceProvider.GetRequiredService<IDirectoryAbstraction>();
+      _file = serviceProvider.GetRequiredService<IFileAbstraction>();
+      _jsonHelper = serviceProvider.GetRequiredService<IJsonHelper>();
+      _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
+      _environment = serviceProvider.GetRequiredService<IEnvironmentAbstraction>();
 
       // Load all required configuration
-      CoreConfig = config;
-      _environment = environment;
-      _dateTime = dateTime;
-      DnsEntriesConfig = LoadConfiguration(config);
+      CoreConfig = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
+      
+      DnsEntriesConfig = LoadConfiguration(CoreConfig);
     }
 
 

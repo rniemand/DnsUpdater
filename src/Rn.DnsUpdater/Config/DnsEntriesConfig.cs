@@ -10,7 +10,6 @@ namespace Rn.DnsUpdater.Config
 
     public DnsEntriesConfig()
     {
-      // TODO: [TESTS] (DnsEntriesConfig) Add tests
       Entries = new DnsUpdaterEntry[0];
     }
   }
