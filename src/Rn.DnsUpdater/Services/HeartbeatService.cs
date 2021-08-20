@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DocumentSink.ClientLib;
 using Rn.DnsUpdater.Enums;
+using Rn.DnsUpdater.Extensions;
 using Rn.NetCore.Common.Abstractions;
-using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Common.Metrics.Builders;
 using Rn.NetCore.Common.Metrics.Interfaces;
 
@@ -15,7 +16,7 @@ namespace Rn.DnsUpdater.Services
 
   public class HeartbeatService : IHeartbeatService
   {
-    private readonly ILoggerAdapter<HeartbeatService> _logger;
+    private readonly IDocumentSinkClient _logger;
     private readonly IMetricService _metrics;
     private readonly IDateTimeAbstraction _dateTime;
 
@@ -23,11 +24,11 @@ namespace Rn.DnsUpdater.Services
     private readonly DateTime _startTime;
 
     public HeartbeatService(
-      ILoggerAdapter<HeartbeatService> logger, 
+      IDocumentSinkClient documentSink, 
       IMetricService metrics, 
       IDateTimeAbstraction dateTime)
     {
-      _logger = logger;
+      _logger = documentSink;
       _metrics = metrics;
       _dateTime = dateTime;
       

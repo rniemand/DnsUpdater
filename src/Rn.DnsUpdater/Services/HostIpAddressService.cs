@@ -9,7 +9,6 @@ using Rn.DnsUpdater.Extensions;
 using Rn.DnsUpdater.Metrics;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
-using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Common.Metrics.Builders;
 using Rn.NetCore.Common.Metrics.Interfaces;
 using Rn.NetCore.Common.Services;
@@ -23,8 +22,7 @@ namespace Rn.DnsUpdater.Services
 
   public class HostIpAddressService : IHostIpAddressService
   {
-    private readonly ILoggerAdapter<HostIpAddressService> _logger;
-    private readonly IDocumentSinkClient _documentSink;
+    private readonly IDocumentSinkClient _logger;
     private readonly IBasicHttpService _httpService;
     private readonly IDateTimeAbstraction _dateTime;
     private readonly IMetricService _metrics;
@@ -34,17 +32,15 @@ namespace Rn.DnsUpdater.Services
     private DateTime? _nextUpdate;
 
     public HostIpAddressService(
-      ILoggerAdapter<HostIpAddressService> logger,
+      IDocumentSinkClient documentSink, 
       IBasicHttpService httpService,
       IDateTimeAbstraction dateTime,
       IMetricService metrics,
-      IDocumentSinkClient documentSink,
       DnsUpdaterConfig config)
     {
-      _logger = logger;
+      _logger = documentSink;
       _httpService = httpService;
       _config = config;
-      _documentSink = documentSink;
       _metrics = metrics;
       _dateTime = dateTime;
 
@@ -62,7 +58,7 @@ namespace Rn.DnsUpdater.Services
       if (_lastHostAddress.IgnoreCaseEquals(hostAddress))
         return false;
 
-      _documentSink.Info("Host IP Address changed from '{old}' to '{new}'",
+      _logger.Info("Host IP Address changed from '{old}' to '{new}'",
         _lastHostAddress.FallbackTo("(none)"),
         hostAddress
       );
@@ -103,8 +99,10 @@ namespace Rn.DnsUpdater.Services
           //const string url = "https://api64.ipify.org/";
           const string url = "https://api.ipify.org/";
           var timeout = _config.DefaultHttpTimeoutMs;
+
+          throw new Exception("whoops", new Exception("inner whoops"));
           
-          _documentSink.Info("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
+          _logger.Info("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
           builder.WithCustomInt1(timeout);
 
           var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -122,13 +120,13 @@ namespace Rn.DnsUpdater.Services
             return hostIpAddress;
           }
 
-          _documentSink.Warning("Got empty response, returning old IP Address to be safe");
+          _logger.Warning("Got empty response, returning old IP Address to be safe");
           return _lastHostAddress;
         }
       }
       catch (Exception ex)
       {
-        _documentSink.LogUnexpectedException(ex);
+        _logger.LogUnexpectedException(ex);
         return _lastHostAddress;
       }
       finally

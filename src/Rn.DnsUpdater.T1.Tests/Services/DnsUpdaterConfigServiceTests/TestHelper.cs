@@ -1,4 +1,5 @@
 ﻿using System;
+using DocumentSink.ClientLib;
 using NSubstitute;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Services;
@@ -13,7 +14,7 @@ namespace Rn.DnsUpdater.T1.Tests.Services.DnsUpdaterConfigServiceTests
   public static class TestHelper
   {
     public static IServiceProvider GetServiceProvider(
-      ILoggerAdapter<DnsUpdaterConfigService> logger = null,
+      IDocumentSinkClient documentSink = null,
       IPathAbstraction path = null,
       IDirectoryAbstraction directory = null,
       IFileAbstraction file = null,
@@ -25,7 +26,7 @@ namespace Rn.DnsUpdater.T1.Tests.Services.DnsUpdaterConfigServiceTests
       config ??= new DnsUpdaterConfigBuilder().BuildWithDefaults();
 
       return new ServiceProviderBuilder()
-        .WithLogger(logger)
+        .WithService(documentSink ?? Substitute.For<IDocumentSinkClient>())
         .WithService(path ?? Substitute.For<IPathAbstraction>())
         .WithService(directory ?? Substitute.For<IDirectoryAbstraction>())
         .WithService(file ?? Substitute.For<IFileAbstraction>())

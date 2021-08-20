@@ -298,6 +298,28 @@ namespace Rn.DnsUpdater.Extensions
 
   public static class DocumentSinkClientExtensions
   {
+    public static void Debug(this IDocumentSinkClient client, string message, params object[] args)
+    {
+      // TODO: [TESTS] (DocumentSinkClientExtensions.Debug) Add tests
+      var formatter = new FormattedLogValues(message, args);
+
+      var entry = new LogFileLine
+      {
+        Message = formatter.ToString(),
+        EntryDate = DateTime.UtcNow
+      }.WithSeverity(LogSeverity.Debug);
+
+      foreach (var (key, value) in formatter)
+      {
+        if (key.IgnoreCaseEquals(LogLineField.Category.ToString("G")))
+        {
+          entry.Category = CastAsString(value);
+        }
+      }
+
+      Task.Run(() => client.Ingest(entry));
+    }
+
     public static void Info(this IDocumentSinkClient client, string message, params object[] args)
     {
       // TODO: [TESTS] (DocumentSinkClientExtensions.Info) Add tests
@@ -351,8 +373,8 @@ namespace Rn.DnsUpdater.Extensions
       {
         Message = formatter.ToString(),
         EntryDate = DateTime.UtcNow
-      }.WithSeverity(LogSeverity.Warning);
-
+      }.WithSeverity(LogSeverity.Error);
+      
       foreach (var (key, value) in formatter)
       {
         if (key.IgnoreCaseEquals(LogLineField.Category.ToString("G")))
@@ -368,10 +390,9 @@ namespace Rn.DnsUpdater.Extensions
     {
       // TODO: [TESTS] (DocumentSinkClientExtensions.Error) Add tests
       client.Error(
-        "An unexpected exception of type {exType} was thrown in {method}. " +
-        "{exMessage}. | {exStack}",
+        "{exType} was thrown in '{method}' {exMessage}. | {exStack}",
         ex.GetType().Name,
-        "HOLDER",
+        LoggerExtensions.GetFullMethodName(2),
         ex.Message,
         ex.HumanStackTrace()
       );

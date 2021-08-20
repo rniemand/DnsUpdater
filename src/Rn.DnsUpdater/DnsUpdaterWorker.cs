@@ -8,7 +8,6 @@ using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
 using Rn.DnsUpdater.Extensions;
 using Rn.DnsUpdater.Services;
-using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Common.Metrics.Builders;
 using Rn.NetCore.Common.Metrics.Interfaces;
 
@@ -16,16 +15,14 @@ namespace Rn.DnsUpdater
 {
   public class DnsUpdaterWorker : BackgroundService
   {
-    private readonly ILoggerAdapter<DnsUpdaterWorker> _logger;
+    private readonly IDocumentSinkClient _logger; 
     private readonly IHostIpAddressService _addressService;
     private readonly IDnsUpdaterConfigService _configService;
     private readonly IDnsUpdaterService _dnsUpdater;
     private readonly IHeartbeatService _heartbeatService;
     private readonly IMetricService _metrics;
-    private readonly IDocumentSinkClient _documentSink;
 
     public DnsUpdaterWorker(
-      ILoggerAdapter<DnsUpdaterWorker> logger,
       IHostIpAddressService addressService,
       IDnsUpdaterConfigService configService,
       IDnsUpdaterService dnsUpdater,
@@ -33,29 +30,18 @@ namespace Rn.DnsUpdater
       IHeartbeatService heartbeatService,
       IDocumentSinkClient documentSink)
     {
-      _logger = logger;
+      _logger = documentSink; 
       _addressService = addressService;
       _configService = configService;
       _dnsUpdater = dnsUpdater;
       _metrics = metrics;
       _heartbeatService = heartbeatService;
-      _documentSink = documentSink;
     }
 
     // Required methods
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
       // TODO: [TESTS] (DnsUpdaterWorker.ExecuteAsync) Add tests
-
-      try
-      {
-        throw new Exception("WHOOPS");
-      }
-      catch (Exception ex)
-      {
-        _documentSink.LogUnexpectedException(ex);
-      }
-
       while (!stoppingToken.IsCancellationRequested)
       {
         await _heartbeatService.Tick();
@@ -82,7 +68,7 @@ namespace Rn.DnsUpdater
       if (dnsEntries.Count == 0)
         return;
 
-      _documentSink.Info(dnsEntries.Count == 1
+      _logger.Info(dnsEntries.Count == 1
         ? "Updating 1 DNS entry"
         : $"Updating {dnsEntries.Count} DNS entries"
       );

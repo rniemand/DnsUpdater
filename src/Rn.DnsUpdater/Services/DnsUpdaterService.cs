@@ -2,11 +2,12 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using DocumentSink.ClientLib;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
+using Rn.DnsUpdater.Extensions;
 using Rn.DnsUpdater.Metrics;
 using Rn.NetCore.Common.Abstractions;
-using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Common.Metrics.Interfaces;
 using Rn.NetCore.Common.Services;
 
@@ -19,20 +20,20 @@ namespace Rn.DnsUpdater.Services
 
   public class DnsUpdaterService : IDnsUpdaterService
   {
-    private readonly ILoggerAdapter<DnsUpdaterService> _logger;
+    private readonly IDocumentSinkClient _logger;
     private readonly IDateTimeAbstraction _dateTime;
     private readonly IBasicHttpService _httpService;
     private readonly IMetricService _metrics;
     private readonly DnsUpdaterConfig _config;
 
     public DnsUpdaterService(
-      ILoggerAdapter<DnsUpdaterService> logger,
+      IDocumentSinkClient documentSink,
       IDateTimeAbstraction dateTime,
       IBasicHttpService httpService,
       IMetricService metrics,
       DnsUpdaterConfig config)
     {
-      _logger = logger;
+      _logger = documentSink;
       _dateTime = dateTime;
       _httpService = httpService;
       _config = config;

@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using DocumentSink.ClientLib;
+using NSubstitute;
 using NUnit.Framework;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Abstractions;
@@ -20,7 +21,7 @@ namespace Rn.DnsUpdater.T1.Tests.Services.DnsUpdaterConfigServiceTests
       var _ = new DnsUpdaterConfigService(serviceProvider);
 
       // assert
-      serviceProvider.Received(1).GetService(typeof(ILoggerAdapter<DnsUpdaterConfigService>));
+      serviceProvider.Received(1).GetService(typeof(IDocumentSinkClient));
       serviceProvider.Received(1).GetService(typeof(IPathAbstraction));
       serviceProvider.Received(1).GetService(typeof(IDirectoryAbstraction));
       serviceProvider.Received(1).GetService(typeof(IFileAbstraction));
