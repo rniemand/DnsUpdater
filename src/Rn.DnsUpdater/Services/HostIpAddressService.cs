@@ -2,13 +2,12 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using DocumentSink.ClientLib;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
-using Rn.DnsUpdater.Extensions;
 using Rn.DnsUpdater.Metrics;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
+using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Common.Metrics.Builders;
 using Rn.NetCore.Common.Metrics.Interfaces;
 using Rn.NetCore.Common.Services;
@@ -22,7 +21,7 @@ namespace Rn.DnsUpdater.Services
 
   public class HostIpAddressService : IHostIpAddressService
   {
-    private readonly IDocumentSinkClient _logger;
+    private readonly ILoggerAdapter<HostIpAddressService> _logger;
     private readonly IBasicHttpService _httpService;
     private readonly IDateTimeAbstraction _dateTime;
     private readonly IMetricService _metrics;
@@ -32,13 +31,13 @@ namespace Rn.DnsUpdater.Services
     private DateTime? _nextUpdate;
 
     public HostIpAddressService(
-      IDocumentSinkClient documentSink, 
+      ILoggerAdapter<HostIpAddressService> logger, 
       IBasicHttpService httpService,
       IDateTimeAbstraction dateTime,
       IMetricService metrics,
       DnsUpdaterConfig config)
     {
-      _logger = documentSink;
+      _logger = logger;
       _httpService = httpService;
       _config = config;
       _metrics = metrics;
@@ -100,8 +99,6 @@ namespace Rn.DnsUpdater.Services
           const string url = "https://api.ipify.org/";
           var timeout = _config.DefaultHttpTimeoutMs;
 
-          throw new Exception("whoops", new Exception("inner whoops"));
-          
           _logger.Info("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
           builder.WithCustomInt1(timeout);
 

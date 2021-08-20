@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DocumentSink.ClientLib;
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
-using Rn.DnsUpdater.Extensions;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Helpers;
+using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater.Services
 {
@@ -26,7 +25,7 @@ namespace Rn.DnsUpdater.Services
     public DnsUpdaterConfig CoreConfig { get; private set; }
     public DnsEntriesConfig DnsEntriesConfig { get; private set; }
 
-    private readonly IDocumentSinkClient _logger;
+    private readonly ILoggerAdapter<DnsUpdaterConfigService> _logger;
     private readonly IPathAbstraction _path;
     private readonly IDirectoryAbstraction _directory;
     private readonly IFileAbstraction _file;
@@ -37,7 +36,7 @@ namespace Rn.DnsUpdater.Services
     public DnsUpdaterConfigService(IServiceProvider serviceProvider)
     {
       // TODO: [TESTS] (DnsUpdaterConfigService) Add tests
-      _logger = serviceProvider.GetRequiredService<IDocumentSinkClient>();
+      _logger = serviceProvider.GetRequiredService<ILoggerAdapter<DnsUpdaterConfigService>>();
       _path = serviceProvider.GetRequiredService<IPathAbstraction>();
       _directory = serviceProvider.GetRequiredService<IDirectoryAbstraction>();
       _file = serviceProvider.GetRequiredService<IFileAbstraction>();

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
 using Rn.DnsUpdater.Config;
+using Rn.DnsUpdater.Extensions;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Factories;
@@ -83,14 +84,14 @@ namespace Rn.DnsUpdater
             .AddSingleton<IRabbitFactory, RabbitFactory>()
 
             // Logging
-            .AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>))
-            .AddLogging(loggingBuilder =>
-            {
-              // configure Logging with NLog
-              loggingBuilder.ClearProviders();
-              loggingBuilder.SetMinimumLevel(LogLevel.Trace);
-              loggingBuilder.AddNLog(hostContext.Configuration);
-            })
+            .AddSingleton(typeof(ILoggerAdapter<>), typeof(DocumentSinkLoggerAdapter<>))
+            //.AddLogging(loggingBuilder =>
+            //{
+            //  // configure Logging with NLog
+            //  loggingBuilder.ClearProviders();
+            //  loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+            //  loggingBuilder.AddNLog(hostContext.Configuration);
+            //})
 
             // Workers
             .AddHostedService<DnsUpdaterWorker>();

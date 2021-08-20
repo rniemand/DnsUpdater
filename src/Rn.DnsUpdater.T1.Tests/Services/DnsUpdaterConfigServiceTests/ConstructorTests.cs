@@ -21,7 +21,7 @@ namespace Rn.DnsUpdater.T1.Tests.Services.DnsUpdaterConfigServiceTests
       var _ = new DnsUpdaterConfigService(serviceProvider);
 
       // assert
-      serviceProvider.Received(1).GetService(typeof(IDocumentSinkClient));
+      serviceProvider.Received(1).GetService(typeof(ILoggerAdapter<DnsUpdaterConfigService>));
       serviceProvider.Received(1).GetService(typeof(IPathAbstraction));
       serviceProvider.Received(1).GetService(typeof(IDirectoryAbstraction));
       serviceProvider.Received(1).GetService(typeof(IFileAbstraction));

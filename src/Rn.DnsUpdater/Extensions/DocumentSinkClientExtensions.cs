@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using DocumentSink.ClientLib;
 using DocumentSink.ClientLib.Enums;
 using DocumentSink.ClientLib.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Rn.NetCore.Common.Extensions;
 using Rn.NetCore.Common.Logging;
 
@@ -298,6 +299,28 @@ namespace Rn.DnsUpdater.Extensions
 
   public static class DocumentSinkClientExtensions
   {
+    public static void Trace(this IDocumentSinkClient client, string message, params object[] args)
+    {
+      // TODO: [TESTS] (DocumentSinkClientExtensions.Debug) Add tests
+      var formatter = new FormattedLogValues(message, args);
+
+      var entry = new LogFileLine
+      {
+        Message = formatter.ToString(),
+        EntryDate = DateTime.UtcNow
+      }.WithSeverity(LogSeverity.Trace);
+
+      foreach (var (key, value) in formatter)
+      {
+        if (key.IgnoreCaseEquals(LogLineField.Category.ToString("G")))
+        {
+          entry.Category = CastAsString(value);
+        }
+      }
+
+      Task.Run(() => client.Ingest(entry));
+    }
+
     public static void Debug(this IDocumentSinkClient client, string message, params object[] args)
     {
       // TODO: [TESTS] (DocumentSinkClientExtensions.Debug) Add tests
@@ -407,6 +430,46 @@ namespace Rn.DnsUpdater.Extensions
         return i.ToString("D");
 
       return string.Empty;
+    }
+  }
+
+  public class DocumentSinkLoggerAdapter<T> : ILoggerAdapter<T>
+  {
+    public DocumentSinkLoggerAdapter(IServiceProvider services)
+    {
+      var documentSinkClient = services.GetService<IDocumentSinkClient>();
+
+      Console.WriteLine("fdfd");
+    }
+
+    public void Trace(string message, params object[] args)
+    {
+      Console.WriteLine("");
+    }
+
+    public void Debug(string message, params object[] args)
+    {
+      Console.WriteLine("");
+    }
+
+    public void Info(string message, params object[] args)
+    {
+      Console.WriteLine("");
+    }
+
+    public void Warning(string message, params object[] args)
+    {
+      Console.WriteLine("");
+    }
+
+    public void Error(string message, params object[] args)
+    {
+      Console.WriteLine("");
+    }
+
+    public void Error(Exception ex, string message, params object[] args)
+    {
+      Console.WriteLine("");
     }
   }
 }
