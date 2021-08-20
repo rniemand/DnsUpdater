@@ -31,7 +31,7 @@ namespace Rn.DnsUpdater.Services
     private DateTime? _nextUpdate;
 
     public HostIpAddressService(
-      ILoggerAdapter<HostIpAddressService> logger,
+      ILoggerAdapter<HostIpAddressService> logger, 
       IBasicHttpService httpService,
       IDateTimeAbstraction dateTime,
       IMetricService metrics,
@@ -98,12 +98,12 @@ namespace Rn.DnsUpdater.Services
           //const string url = "https://api64.ipify.org/";
           const string url = "https://api.ipify.org/";
           var timeout = _config.DefaultHttpTimeoutMs;
-          
+
           _logger.Info("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
           builder.WithCustomInt1(timeout);
 
           var request = new HttpRequestMessage(HttpMethod.Get, url);
-          var response = await _httpService.SendAsync(request, stoppingToken, timeout);
+          var response = await _httpService.SendAsync(request, timeout, stoppingToken);
           var hostIpAddress = (await response.Content.ReadAsStringAsync(stoppingToken)).LowerTrim();
 
           builder

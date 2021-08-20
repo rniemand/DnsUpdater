@@ -14,7 +14,7 @@ namespace Rn.DnsUpdater
 {
   public class DnsUpdaterWorker : BackgroundService
   {
-    private readonly ILoggerAdapter<DnsUpdaterWorker> _logger;
+    private readonly ILoggerAdapter<DnsUpdaterWorker> _logger; 
     private readonly IHostIpAddressService _addressService;
     private readonly IDnsUpdaterConfigService _configService;
     private readonly IDnsUpdaterService _dnsUpdater;
@@ -29,7 +29,7 @@ namespace Rn.DnsUpdater
       IMetricService metrics,
       IHeartbeatService heartbeatService)
     {
-      _logger = logger;
+      _logger = logger; 
       _addressService = addressService;
       _configService = configService;
       _dnsUpdater = dnsUpdater;
@@ -71,6 +71,10 @@ namespace Rn.DnsUpdater
         ? "Updating 1 DNS entry"
         : $"Updating {dnsEntries.Count} DNS entries"
       );
+      //_logger.Info(dnsEntries.Count == 1
+      //  ? "Updating 1 DNS entry"
+      //  : $"Updating {dnsEntries.Count} DNS entries"
+      //);
 
       var builder = new ServiceMetricBuilder(nameof(DnsUpdaterWorker), nameof(UpdateDnsEntries))
         .WithCategory(MetricCategory.DnsUpdater, MetricSubCategory.UpdateEntries)

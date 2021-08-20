@@ -5,12 +5,13 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="DocumentSink.ClientLib" Version="1.0.103" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.3" />
     <PackageReference Include="Nlog.RabbitMQ.Target" Version="2.7.7" />
-    <PackageReference Include="Rn.NetCore.Common" Version="5.0.1.140" />
-    <PackageReference Include="Rn.NetCore.Metrics.Rabbit" Version="5.0.1.110" />
+    <PackageReference Include="Rn.NetCore.Common" Version="5.0.1.149" />
+    <PackageReference Include="Rn.NetCore.Metrics.Rabbit" Version="5.0.1.115" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="nlog.config">

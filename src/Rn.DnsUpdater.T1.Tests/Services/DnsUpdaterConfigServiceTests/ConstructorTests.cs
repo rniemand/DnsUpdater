@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using DocumentSink.ClientLib;
+using NSubstitute;
 using NUnit.Framework;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Abstractions;
