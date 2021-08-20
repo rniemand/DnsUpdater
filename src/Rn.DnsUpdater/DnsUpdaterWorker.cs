@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using DocumentSink.ClientLib;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
-using Rn.DnsUpdater.Extensions;
 using Rn.DnsUpdater.Services;
+using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Common.Metrics.Builders;
 using Rn.NetCore.Common.Metrics.Interfaces;
 
@@ -15,7 +14,7 @@ namespace Rn.DnsUpdater
 {
   public class DnsUpdaterWorker : BackgroundService
   {
-    private readonly IDocumentSinkClient _logger; 
+    private readonly ILoggerAdapter<DnsUpdaterWorker> _logger; 
     private readonly IHostIpAddressService _addressService;
     private readonly IDnsUpdaterConfigService _configService;
     private readonly IDnsUpdaterService _dnsUpdater;
@@ -23,14 +22,14 @@ namespace Rn.DnsUpdater
     private readonly IMetricService _metrics;
 
     public DnsUpdaterWorker(
+      ILoggerAdapter<DnsUpdaterWorker> logger,
       IHostIpAddressService addressService,
       IDnsUpdaterConfigService configService,
       IDnsUpdaterService dnsUpdater,
       IMetricService metrics,
-      IHeartbeatService heartbeatService,
-      IDocumentSinkClient documentSink)
+      IHeartbeatService heartbeatService)
     {
-      _logger = documentSink; 
+      _logger = logger; 
       _addressService = addressService;
       _configService = configService;
       _dnsUpdater = dnsUpdater;

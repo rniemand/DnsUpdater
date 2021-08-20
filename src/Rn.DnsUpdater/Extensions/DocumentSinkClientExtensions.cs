@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -11,12 +12,14 @@ using DocumentSink.ClientLib;
 using DocumentSink.ClientLib.Enums;
 using DocumentSink.ClientLib.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
 using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater.Extensions
 {
-  class LogValuesFormatter
+  internal class LogValuesFormatter
   {
     private const string NullValue = "(null)";
     private static readonly char[] FormatDelimiters = { ',', ':' };
@@ -296,170 +299,209 @@ namespace Rn.DnsUpdater.Extensions
       return GetEnumerator();
     }
   }
-
-  public static class DocumentSinkClientExtensions
-  {
-    public static void Trace(this IDocumentSinkClient client, string message, params object[] args)
-    {
-      // TODO: [TESTS] (DocumentSinkClientExtensions.Debug) Add tests
-      var formatter = new FormattedLogValues(message, args);
-
-      var entry = new LogFileLine
-      {
-        Message = formatter.ToString(),
-        EntryDate = DateTime.UtcNow
-      }.WithSeverity(LogSeverity.Trace);
-
-      foreach (var (key, value) in formatter)
-      {
-        if (key.IgnoreCaseEquals(LogLineField.Category.ToString("G")))
-        {
-          entry.Category = CastAsString(value);
-        }
-      }
-
-      Task.Run(() => client.Ingest(entry));
-    }
-
-    public static void Debug(this IDocumentSinkClient client, string message, params object[] args)
-    {
-      // TODO: [TESTS] (DocumentSinkClientExtensions.Debug) Add tests
-      var formatter = new FormattedLogValues(message, args);
-
-      var entry = new LogFileLine
-      {
-        Message = formatter.ToString(),
-        EntryDate = DateTime.UtcNow
-      }.WithSeverity(LogSeverity.Debug);
-
-      foreach (var (key, value) in formatter)
-      {
-        if (key.IgnoreCaseEquals(LogLineField.Category.ToString("G")))
-        {
-          entry.Category = CastAsString(value);
-        }
-      }
-
-      Task.Run(() => client.Ingest(entry));
-    }
-
-    public static void Info(this IDocumentSinkClient client, string message, params object[] args)
-    {
-      // TODO: [TESTS] (DocumentSinkClientExtensions.Info) Add tests
-      var formatter = new FormattedLogValues(message, args);
-
-      var entry = new LogFileLine
-      {
-        Message = formatter.ToString(),
-        EntryDate = DateTime.UtcNow
-      }.WithSeverity(LogSeverity.Information);
-
-      foreach (var (key, value) in formatter)
-      {
-        if (key.IgnoreCaseEquals(LogLineField.Category.ToString("G")))
-        {
-          entry.Category = CastAsString(value);
-        }
-      }
-
-      Task.Run(() => client.Ingest(entry));
-    }
-
-    public static void Warning(this IDocumentSinkClient client, string message, params object[] args)
-    {
-      // TODO: [TESTS] (DocumentSinkClientExtensions.Warning) Add tests
-      var formatter = new FormattedLogValues(message, args);
-
-      var entry = new LogFileLine
-      {
-        Message = formatter.ToString(),
-        EntryDate = DateTime.UtcNow
-      }.WithSeverity(LogSeverity.Warning);
-
-      foreach (var (key, value) in formatter)
-      {
-        if (key.IgnoreCaseEquals(LogLineField.Category.ToString("G")))
-        {
-          entry.Category = CastAsString(value);
-        }
-      }
-
-      Task.Run(() => client.Ingest(entry));
-    }
-
-    public static void Error(this IDocumentSinkClient client, string message, params object[] args)
-    {
-      // TODO: [TESTS] (DocumentSinkClientExtensions.Error) Add tests
-      var formatter = new FormattedLogValues(message, args);
-
-      var entry = new LogFileLine
-      {
-        Message = formatter.ToString(),
-        EntryDate = DateTime.UtcNow
-      }.WithSeverity(LogSeverity.Error);
-      
-      foreach (var (key, value) in formatter)
-      {
-        if (key.IgnoreCaseEquals(LogLineField.Category.ToString("G")))
-        {
-          entry.Category = CastAsString(value);
-        }
-      }
-
-      Task.Run(() => client.Ingest(entry));
-    }
-
-    public static void LogUnexpectedException(this IDocumentSinkClient client, Exception ex)
-    {
-      // TODO: [TESTS] (DocumentSinkClientExtensions.Error) Add tests
-      client.Error(
-        "{exType} was thrown in '{method}' {exMessage}. | {exStack}",
-        ex.GetType().Name,
-        LoggerExtensions.GetFullMethodName(2),
-        ex.Message,
-        ex.HumanStackTrace()
-      );
-    }
-
-
-    private static string CastAsString(object obj)
-    {
-      // TODO: [TESTS] (DocumentSinkClientExtensions.CastAsString) Add tests
-
-      if (obj is int i)
-        return i.ToString("D");
-
-      return string.Empty;
-    }
-  }
-
+  
   public class DocumentSinkLoggerAdapter<T> : ILoggerAdapter<T>
   {
     private readonly IDocumentSinkClient _documentSink;
+    private readonly IDateTimeAbstraction _dateTime;
+    private readonly ILogger<T> _logger;
+    private readonly string _hostName;
+    private bool _useBaseLogger;
+    private int _errorCount;
 
-    public DocumentSinkLoggerAdapter(IDocumentSinkClient documentSink)
+    public DocumentSinkLoggerAdapter(IServiceProvider serviceProvider)
     {
-      _documentSink = documentSink;
+      // TODO: [TESTS] (DocumentSinkLoggerAdapter.DocumentSinkLoggerAdapter) Add tests
+      _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
+      _documentSink = serviceProvider.GetService<IDocumentSinkClient>();
+      _useBaseLogger = false;
+      _errorCount = 0;
+
+      // Try to set the Host Name
+      var environment = serviceProvider.GetService<IEnvironmentAbstraction>();
+      if (environment != null)
+        _hostName = environment.MachineName.UpperTrim();
+
+      if (_documentSink == null)
+      {
+        _useBaseLogger = true;
+        _logger = serviceProvider.GetRequiredService<ILogger<T>>();
+      }
     }
 
     public void Trace(string message, params object[] args)
-      => _documentSink.Trace(message, args);
+      => Log(LogSeverity.Trace, message, args);
 
     public void Debug(string message, params object[] args)
-      => _documentSink.Debug(message, args);
+      => Log(LogSeverity.Debug, message, args);
 
     public void Info(string message, params object[] args)
-      => _documentSink.Info(message, args);
+      => Log(LogSeverity.Information, message, args);
 
     public void Warning(string message, params object[] args)
-      => _documentSink.Warning(message, args);
+      => Log(LogSeverity.Warning, message, args);
 
     public void Error(string message, params object[] args)
-      => _documentSink.Error(message, args);
+      => Log(LogSeverity.Error, message, args);
 
+    // TODO: [REVISE] (DocumentSinkLoggerAdapter.Error) Handle "Exception"
     public void Error(Exception ex, string message, params object[] args)
+      => Log(LogSeverity.Error, message, args);
+
+    // Internal methods
+    private void Log(LogSeverity severity, string message, params object[] args)
     {
-      Console.WriteLine("");
+      // TODO: [TESTS] (DocumentSinkLoggerAdapter.Log) Add tests
+      if (_useBaseLogger)
+      {
+        BaseLoggerLog(severity, message, args);
+        return;
+      }
+
+      // Generate the message to send
+      try
+      {
+        var formatter = new FormattedLogValues(message, args);
+        var entry = new LogFileLine(severity)
+        {
+          EntryDate = _dateTime.UtcNow,
+          Message = formatter.ToString()
+        };
+
+        // Handle special placeholders
+        foreach (var formattedLogValue in formatter)
+          ExtendMessage(entry, formattedLogValue);
+
+        // Set instance specific properties
+        entry.Logger = GetCallingLogger(); 
+        entry.Method = GetCallingMethod();
+        entry.Host = _hostName;
+
+        Task.Run(() => _documentSink.Ingest(entry));
+      }
+      catch
+      {
+        _errorCount++;
+        if (_errorCount >= 5)
+          _useBaseLogger = true;
+      }
+    }
+
+    private static string GetCallingMethod()
+    {
+      // TODO: [TESTS] (DocumentSinkLoggerAdapter.GetCallingMethod) Add tests
+      var stackTrace = new StackTrace();
+      var stackFrame = stackTrace.GetFrame(3);
+      if (stackFrame == null)
+        return string.Empty;
+
+      var methodBase = stackFrame.GetMethod();
+      if (methodBase == null)
+        return string.Empty;
+
+      var methodName = methodBase.Name;
+      var typeName = methodBase.ReflectedType?.FullName;
+
+      if (!methodName.IgnoreCaseEquals("MoveNext"))
+        return methodName;
+
+      const string rxp1 = "(.*?)\\+<([^>]+)>.*";
+      if (!typeName.MatchesRegex(rxp1))
+        return methodName;
+
+      var match = typeName.GetRegexMatch(rxp1);
+      return match.Groups[2].Value;
+    }
+
+    private static string GetCallingLogger()
+    {
+      // TODO: [TESTS] (DocumentSinkLoggerAdapter.GetCallingMethod) Add tests
+      var stackTrace = new StackTrace();
+      var stackFrame = stackTrace.GetFrame(3);
+      if (stackFrame == null)
+        return string.Empty;
+
+      var methodBase = stackFrame.GetMethod();
+      if (methodBase == null)
+        return string.Empty;
+
+      var methodName = methodBase.Name;
+      var typeName = methodBase.ReflectedType?.FullName;
+
+      if (!methodName.IgnoreCaseEquals("MoveNext"))
+        return typeName;
+
+      const string rxp1 = "(.*?)\\+<([^>]+)>.*";
+      if (!typeName.MatchesRegex(rxp1))
+        return methodName;
+
+      var match = typeName.GetRegexMatch(rxp1);
+      return match.Groups[1].Value;
+    }
+
+    private static void ExtendMessage(LogFileLine entry, KeyValuePair<string, object> kvPair)
+    {
+      // TODO: [TESTS] (DocumentSinkLoggerAdapter.ExtendMessage) Add tests
+      var (key, value) = kvPair;
+
+      if (key.IgnoreCaseEquals(LogLineField.Category.ToString("G")))
+      {
+        entry.Category = CastAsString(value);
+      }
+      else
+      {
+        // swallow
+      }
+    }
+
+    private void BaseLoggerLog(LogSeverity severity, string message, params object[] args)
+    {
+      // TODO: [TESTS] (DocumentSinkLoggerAdapter.BaseLoggerLog) Add tests
+      switch (severity)
+      {
+        case LogSeverity.Unknown:
+        case LogSeverity.Verbose:
+        case LogSeverity.Trace:
+          _logger.LogTrace(message, args);
+          return;
+
+        case LogSeverity.Debug:
+          _logger.LogDebug(message, args);
+          return;
+
+        case LogSeverity.Information:
+          _logger.LogInformation(message, args);
+          return;
+
+        case LogSeverity.Warning:
+          _logger.LogWarning(message, args);
+          return;
+
+        case LogSeverity.Error:
+          _logger.LogError(message, args);
+          return;
+
+        case LogSeverity.Fatal:
+          _logger.LogError($"FATAL: {message}", args);
+          return;
+
+        default:
+          throw new ArgumentOutOfRangeException(nameof(severity), severity, null);
+      }
+    }
+
+    private static string CastAsString(object obj)
+    {
+      // TODO: [TESTS] (DocumentSinkLoggerAdapter.CastAsString) Add tests
+      return obj switch
+      {
+        int i => i.ToString("D"),
+        string s => s,
+        DateTime d => d.ToString("u"),
+        long l => l.ToString("D"),
+        float f => f.ToString("N"),
+        _ => obj.ToString()
+      };
     }
   }
 }
