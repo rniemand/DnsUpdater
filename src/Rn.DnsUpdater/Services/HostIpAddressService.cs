@@ -103,7 +103,7 @@ namespace Rn.DnsUpdater.Services
           builder.WithCustomInt1(timeout);
 
           var request = new HttpRequestMessage(HttpMethod.Get, url);
-          var response = await _httpService.SendAsync(request, stoppingToken, timeout);
+          var response = await _httpService.SendAsync(request, timeout, stoppingToken);
           var hostIpAddress = (await response.Content.ReadAsStringAsync(stoppingToken)).LowerTrim();
 
           builder

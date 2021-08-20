@@ -84,7 +84,7 @@ namespace Rn.DnsUpdater.Services
           var updateUrl = entry.GetConfig(ConfigKeys.Url);
           var timeoutMs = entry.GetIntConfig(ConfigKeys.TimeoutMs, _config.DefaultHttpTimeoutMs);
           var request = new HttpRequestMessage(HttpMethod.Get, updateUrl);
-          var response = await _httpService.SendAsync(request, stoppingToken, timeoutMs);
+          var response = await _httpService.SendAsync(request, timeoutMs, stoppingToken);
           var responseBody = await response.Content.ReadAsStringAsync(stoppingToken);
           builder.WithResponse(response);
 
