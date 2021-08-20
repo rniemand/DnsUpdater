@@ -1,17 +1,17 @@
-# docker build -t niemandr/rndnsupdater:dev-build .
-
 FROM mcr.microsoft.com/dotnet/runtime:5.0-buster-slim AS base
 WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
 
-COPY ["/src/Rn.DnsUpdater/Rn.DnsUpdater.csproj", "/rn-build/Rn.DnsUpdater/"]
-RUN dotnet restore "/rn-build/Rn.DnsUpdater/Rn.DnsUpdater.csproj"
+COPY ["/src/Rn.DnsUpdater/Rn.DnsUpdater.csproj", "Rn.DnsUpdater/"]
 
-COPY /src/Rn.DnsUpdater/ /rn-build/Rn.DnsUpdater/
+RUN dotnet restore "Rn.DnsUpdater/Rn.DnsUpdater.csproj"
 
-WORKDIR /rn-build/Rn.DnsUpdater/
+COPY "/src/Rn.DnsUpdater/" "Rn.DnsUpdater/"
+
+WORKDIR "/src/Rn.DnsUpdater/"
+
 RUN dotnet build "Rn.DnsUpdater.csproj" -c Release -o /app/build
 
 FROM build AS publish
