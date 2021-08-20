@@ -2,8 +2,10 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using DocumentSink.ClientLib;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
+using Rn.DnsUpdater.Extensions;
 using Rn.DnsUpdater.Metrics;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
@@ -22,6 +24,7 @@ namespace Rn.DnsUpdater.Services
   public class HostIpAddressService : IHostIpAddressService
   {
     private readonly ILoggerAdapter<HostIpAddressService> _logger;
+    private readonly IDocumentSinkClient _documentSink;
     private readonly IBasicHttpService _httpService;
     private readonly IDateTimeAbstraction _dateTime;
     private readonly IMetricService _metrics;
@@ -35,11 +38,13 @@ namespace Rn.DnsUpdater.Services
       IBasicHttpService httpService,
       IDateTimeAbstraction dateTime,
       IMetricService metrics,
+      IDocumentSinkClient documentSink,
       DnsUpdaterConfig config)
     {
       _logger = logger;
       _httpService = httpService;
       _config = config;
+      _documentSink = documentSink;
       _metrics = metrics;
       _dateTime = dateTime;
 
@@ -57,7 +62,7 @@ namespace Rn.DnsUpdater.Services
       if (_lastHostAddress.IgnoreCaseEquals(hostAddress))
         return false;
 
-      _logger.Info("Host IP Address changed from '{old}' to '{new}'",
+      _documentSink.Info("Host IP Address changed from '{old}' to '{new}'",
         _lastHostAddress.FallbackTo("(none)"),
         hostAddress
       );
@@ -99,7 +104,7 @@ namespace Rn.DnsUpdater.Services
           const string url = "https://api.ipify.org/";
           var timeout = _config.DefaultHttpTimeoutMs;
           
-          _logger.Info("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
+          _documentSink.Info("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
           builder.WithCustomInt1(timeout);
 
           var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -117,13 +122,13 @@ namespace Rn.DnsUpdater.Services
             return hostIpAddress;
           }
 
-          _logger.Warning("Got empty response, returning old IP Address to be safe");
+          _documentSink.Warning("Got empty response, returning old IP Address to be safe");
           return _lastHostAddress;
         }
       }
       catch (Exception ex)
       {
-        _logger.LogUnexpectedException(ex);
+        _documentSink.LogUnexpectedException(ex);
         return _lastHostAddress;
       }
       finally

@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DocumentSink.ClientLib;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
+using Rn.DnsUpdater.Extensions;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Common.Metrics.Builders;
@@ -20,6 +22,7 @@ namespace Rn.DnsUpdater
     private readonly IDnsUpdaterService _dnsUpdater;
     private readonly IHeartbeatService _heartbeatService;
     private readonly IMetricService _metrics;
+    private readonly IDocumentSinkClient _documentSink;
 
     public DnsUpdaterWorker(
       ILoggerAdapter<DnsUpdaterWorker> logger,
@@ -27,7 +30,8 @@ namespace Rn.DnsUpdater
       IDnsUpdaterConfigService configService,
       IDnsUpdaterService dnsUpdater,
       IMetricService metrics,
-      IHeartbeatService heartbeatService)
+      IHeartbeatService heartbeatService,
+      IDocumentSinkClient documentSink)
     {
       _logger = logger;
       _addressService = addressService;
@@ -35,12 +39,23 @@ namespace Rn.DnsUpdater
       _dnsUpdater = dnsUpdater;
       _metrics = metrics;
       _heartbeatService = heartbeatService;
+      _documentSink = documentSink;
     }
 
     // Required methods
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
       // TODO: [TESTS] (DnsUpdaterWorker.ExecuteAsync) Add tests
+
+      try
+      {
+        throw new Exception("WHOOPS");
+      }
+      catch (Exception ex)
+      {
+        _documentSink.LogUnexpectedException(ex);
+      }
+
       while (!stoppingToken.IsCancellationRequested)
       {
         await _heartbeatService.Tick();
@@ -67,10 +82,14 @@ namespace Rn.DnsUpdater
       if (dnsEntries.Count == 0)
         return;
 
-      _logger.Info(dnsEntries.Count == 1
+      _documentSink.Info(dnsEntries.Count == 1
         ? "Updating 1 DNS entry"
         : $"Updating {dnsEntries.Count} DNS entries"
       );
+      //_logger.Info(dnsEntries.Count == 1
+      //  ? "Updating 1 DNS entry"
+      //  : $"Updating {dnsEntries.Count} DNS entries"
+      //);
 
       var builder = new ServiceMetricBuilder(nameof(DnsUpdaterWorker), nameof(UpdateDnsEntries))
         .WithCategory(MetricCategory.DnsUpdater, MetricSubCategory.UpdateEntries)

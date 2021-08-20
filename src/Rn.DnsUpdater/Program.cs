@@ -1,4 +1,5 @@
 using System;
+using DocumentSink.ClientLib;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +9,7 @@ using NLog.Extensions.Logging;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Abstractions;
+using Rn.NetCore.Common.Factories;
 using Rn.NetCore.Common.Helpers;
 using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Common.Metrics;
@@ -25,7 +27,7 @@ namespace Rn.DnsUpdater
     public static void Main(string[] args)
     {
       var logger = LogManager.GetCurrentClassLogger();
-
+      
       try
       {
         CreateHostBuilder(args).Build().Run();
@@ -46,19 +48,32 @@ namespace Rn.DnsUpdater
         .ConfigureServices((hostContext, services) =>
         {
           services
+            // Config
             .AddSingleton(GenerateConfig(hostContext))
+            .AddSingleton(hostContext.Configuration)
+
+            // Clients
+            .AddSingleton<IDocumentSinkClient, DocumentSinkClient>()
+
+            // Services
             .AddSingleton<IHostIpAddressService, HostIpAddressService>()
-            .AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>))
+            .AddSingleton<IBasicHttpService, BasicHttpService>()
+            .AddSingleton<IDnsUpdaterService, DnsUpdaterService>()
+            .AddSingleton<IDnsUpdaterConfigService, DnsUpdaterConfigService>()
+            .AddSingleton<IHeartbeatService, HeartbeatService>()
+
+            // Abstractions
             .AddSingleton<IFileAbstraction, FileAbstraction>()
             .AddSingleton<IDirectoryAbstraction, DirectoryAbstraction>()
             .AddSingleton<IEnvironmentAbstraction, EnvironmentAbstraction>()
             .AddSingleton<IPathAbstraction, PathAbstraction>()
             .AddSingleton<IDateTimeAbstraction, DateTimeAbstraction>()
+
+            // Factories
+            .AddSingleton<IHttpClientFactory, HttpClientFactory>()
+
+            // Helpers
             .AddSingleton<IJsonHelper, JsonHelper>()
-            .AddSingleton<IBasicHttpService, BasicHttpService>()
-            .AddSingleton<IDnsUpdaterService, DnsUpdaterService>()
-            .AddSingleton<IDnsUpdaterConfigService, DnsUpdaterConfigService>()
-            .AddSingleton<IHeartbeatService, HeartbeatService>()
 
             // Metrics
             .AddSingleton<IMetricService, MetricService>()
@@ -68,6 +83,7 @@ namespace Rn.DnsUpdater
             .AddSingleton<IRabbitFactory, RabbitFactory>()
 
             // Logging
+            .AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>))
             .AddLogging(loggingBuilder =>
             {
               // configure Logging with NLog
