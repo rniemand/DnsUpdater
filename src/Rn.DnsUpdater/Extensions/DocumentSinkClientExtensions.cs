@@ -435,37 +435,27 @@ namespace Rn.DnsUpdater.Extensions
 
   public class DocumentSinkLoggerAdapter<T> : ILoggerAdapter<T>
   {
-    public DocumentSinkLoggerAdapter(IServiceProvider services)
-    {
-      var documentSinkClient = services.GetService<IDocumentSinkClient>();
+    private readonly IDocumentSinkClient _documentSink;
 
-      Console.WriteLine("fdfd");
+    public DocumentSinkLoggerAdapter(IDocumentSinkClient documentSink)
+    {
+      _documentSink = documentSink;
     }
 
     public void Trace(string message, params object[] args)
-    {
-      Console.WriteLine("");
-    }
+      => _documentSink.Trace(message, args);
 
     public void Debug(string message, params object[] args)
-    {
-      Console.WriteLine("");
-    }
+      => _documentSink.Debug(message, args);
 
     public void Info(string message, params object[] args)
-    {
-      Console.WriteLine("");
-    }
+      => _documentSink.Info(message, args);
 
     public void Warning(string message, params object[] args)
-    {
-      Console.WriteLine("");
-    }
+      => _documentSink.Warning(message, args);
 
     public void Error(string message, params object[] args)
-    {
-      Console.WriteLine("");
-    }
+      => _documentSink.Error(message, args);
 
     public void Error(Exception ex, string message, params object[] args)
     {

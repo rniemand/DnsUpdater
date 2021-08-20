@@ -85,13 +85,13 @@ namespace Rn.DnsUpdater
 
             // Logging
             .AddSingleton(typeof(ILoggerAdapter<>), typeof(DocumentSinkLoggerAdapter<>))
-            //.AddLogging(loggingBuilder =>
-            //{
-            //  // configure Logging with NLog
-            //  loggingBuilder.ClearProviders();
-            //  loggingBuilder.SetMinimumLevel(LogLevel.Trace);
-            //  loggingBuilder.AddNLog(hostContext.Configuration);
-            //})
+            .AddLogging(loggingBuilder =>
+            {
+              // configure Logging with NLog
+              loggingBuilder.ClearProviders();
+              loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+              loggingBuilder.AddNLog(hostContext.Configuration);
+            })
 
             // Workers
             .AddHostedService<DnsUpdaterWorker>();
