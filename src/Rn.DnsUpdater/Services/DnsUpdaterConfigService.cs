@@ -46,7 +46,7 @@ namespace Rn.DnsUpdater.Services
 
       // Load all required configuration
       CoreConfig = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
-      
+
       DnsEntriesConfig = LoadConfiguration(CoreConfig);
     }
 
@@ -99,7 +99,7 @@ namespace Rn.DnsUpdater.Services
       {
         var previousConfig = $"{CoreConfig.ConfigFile}.previous";
 
-        if(_file.Exists(previousConfig))
+        if (_file.Exists(previousConfig))
           _file.Delete(previousConfig);
 
         _file.Copy(CoreConfig.ConfigFile, previousConfig);
