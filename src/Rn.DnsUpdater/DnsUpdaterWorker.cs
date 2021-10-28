@@ -16,7 +16,7 @@ namespace Rn.DnsUpdater
   {
     private readonly ILoggerAdapter<DnsUpdaterWorker> _logger; 
     private readonly IHostIpAddressService _addressService;
-    private readonly IDnsUpdaterConfigService _configService;
+    private readonly IConfigService _configService;
     private readonly IDnsUpdaterService _dnsUpdater;
     private readonly IHeartbeatService _heartbeatService;
     private readonly IMetricService _metrics;
@@ -24,7 +24,7 @@ namespace Rn.DnsUpdater
     public DnsUpdaterWorker(
       ILoggerAdapter<DnsUpdaterWorker> logger,
       IHostIpAddressService addressService,
-      IDnsUpdaterConfigService configService,
+      IConfigService configService,
       IDnsUpdaterService dnsUpdater,
       IMetricService metrics,
       IHeartbeatService heartbeatService)

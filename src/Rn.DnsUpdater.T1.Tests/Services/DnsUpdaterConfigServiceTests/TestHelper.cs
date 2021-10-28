@@ -13,7 +13,7 @@ namespace Rn.DnsUpdater.T1.Tests.Services.DnsUpdaterConfigServiceTests
   public static class TestHelper
   {
     public static IServiceProvider GetServiceProvider(
-      ILoggerAdapter<DnsUpdaterConfigService> logger = null,
+      ILoggerAdapter<ConfigService> logger = null,
       IPathAbstraction path = null,
       IDirectoryAbstraction directory = null,
       IFileAbstraction file = null,

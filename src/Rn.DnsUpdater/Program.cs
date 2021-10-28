@@ -59,7 +59,7 @@ namespace Rn.DnsUpdater
             .AddSingleton<IHostIpAddressService, HostIpAddressService>()
             .AddSingleton<IBasicHttpService, BasicHttpService>()
             .AddSingleton<IDnsUpdaterService, DnsUpdaterService>()
-            .AddSingleton<IDnsUpdaterConfigService, DnsUpdaterConfigService>()
+            .AddSingleton<IConfigService, ConfigService>()
             .AddSingleton<IHeartbeatService, HeartbeatService>()
 
             // Abstractions

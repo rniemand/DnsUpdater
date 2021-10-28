@@ -3,7 +3,7 @@ using Rn.DnsUpdater.Config;
 
 namespace Rn.DnsUpdater.Services
 {
-  public interface IDnsUpdaterConfigService
+  public interface IConfigService
   {
     DnsUpdaterConfig CoreConfig { get; }
     DnsEntriesConfig DnsEntriesConfig { get; }

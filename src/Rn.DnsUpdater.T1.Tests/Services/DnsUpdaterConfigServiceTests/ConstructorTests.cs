@@ -18,10 +18,10 @@ namespace Rn.DnsUpdater.T1.Tests.Services.DnsUpdaterConfigServiceTests
       var serviceProvider = TestHelper.GetServiceProvider();
 
       // act
-      var _ = new DnsUpdaterConfigService(serviceProvider);
+      var _ = new ConfigService(serviceProvider);
 
       // assert
-      serviceProvider.Received(1).GetService(typeof(ILoggerAdapter<DnsUpdaterConfigService>));
+      serviceProvider.Received(1).GetService(typeof(ILoggerAdapter<ConfigService>));
       serviceProvider.Received(1).GetService(typeof(IPathAbstraction));
       serviceProvider.Received(1).GetService(typeof(IDirectoryAbstraction));
       serviceProvider.Received(1).GetService(typeof(IFileAbstraction));
