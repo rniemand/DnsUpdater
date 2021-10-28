@@ -12,11 +12,6 @@ using Rn.NetCore.Common.Services;
 
 namespace Rn.DnsUpdater.Services
 {
-  public interface IDnsUpdaterService
-  {
-    Task UpdateDnsEntry(DnsUpdaterEntry entry, CancellationToken stoppingToken);
-  }
-
   public class DnsUpdaterService : IDnsUpdaterService
   {
     private readonly ILoggerAdapter<DnsUpdaterService> _logger;
@@ -41,9 +36,9 @@ namespace Rn.DnsUpdater.Services
 
 
     // Interface methods
-    public async Task UpdateDnsEntry(DnsUpdaterEntry entry, CancellationToken stoppingToken)
+    public async Task UpdateEntryAsync(DnsUpdaterEntry entry, CancellationToken stoppingToken)
     {
-      // TODO: [TESTS] (DnsUpdaterService.UpdateDnsEntry) Add tests
+      // TODO: [TESTS] (DnsUpdaterService.UpdateEntryAsync) Add tests
       // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
       switch (entry.Type)
       {

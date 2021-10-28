@@ -10,20 +10,10 @@ using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater.Services
 {
-  public interface IDnsUpdaterConfigService
-  {
-    DnsUpdaterConfig CoreConfig { get; }
-    DnsEntriesConfig DnsEntriesConfig { get; }
-
-    List<DnsUpdaterEntry> GetEntriesNeedingUpdate();
-    List<DnsUpdaterEntry> GetEnabledEntries();
-    void SaveConfigState();
-  }
-
   public class DnsUpdaterConfigService : IDnsUpdaterConfigService
   {
-    public DnsUpdaterConfig CoreConfig { get; private set; }
-    public DnsEntriesConfig DnsEntriesConfig { get; private set; }
+    public DnsUpdaterConfig CoreConfig { get; }
+    public DnsEntriesConfig DnsEntriesConfig { get; }
 
     private readonly ILoggerAdapter<DnsUpdaterConfigService> _logger;
     private readonly IPathAbstraction _path;

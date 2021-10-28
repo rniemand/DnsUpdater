@@ -43,8 +43,8 @@ namespace Rn.DnsUpdater
       // TODO: [TESTS] (DnsUpdaterWorker.ExecuteAsync) Add tests
       while (!stoppingToken.IsCancellationRequested)
       {
-        await _heartbeatService.Tick();
-        var hostAddressChanged = await _addressService.HostAddressChanged(stoppingToken);
+        await _heartbeatService.TickAsync();
+        var hostAddressChanged = await _addressService.HostAddressChangedAsync(stoppingToken);
 
         // Decide if we need to update all entries, or just a smaller subset
         var dnsEntries = hostAddressChanged
@@ -83,7 +83,7 @@ namespace Rn.DnsUpdater
           foreach (var dnsEntry in dnsEntries)
           {
             builder.IncrementQueryCount();
-            await _dnsUpdater.UpdateDnsEntry(dnsEntry, stoppingToken);
+            await _dnsUpdater.UpdateEntryAsync(dnsEntry, stoppingToken);
           }
 
           _configService.SaveConfigState();
