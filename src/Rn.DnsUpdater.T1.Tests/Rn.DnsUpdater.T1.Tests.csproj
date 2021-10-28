@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Rn.DnsUpdater\Rn.DnsUpdater.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
