@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace Rn.DnsUpdater.Config
@@ -10,7 +11,7 @@ namespace Rn.DnsUpdater.Config
 
     public DnsEntriesConfig()
     {
-      Entries = new DnsUpdaterEntry[0];
+      Entries = Array.Empty<DnsUpdaterEntry>();
     }
   }
 }

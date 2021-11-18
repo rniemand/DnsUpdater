@@ -3,16 +3,11 @@ using System.Threading.Tasks;
 using Rn.DnsUpdater.Enums;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Common.Metrics.Builders;
-using Rn.NetCore.Common.Metrics.Interfaces;
+using Rn.NetCore.Metrics;
+using Rn.NetCore.Metrics.Builders;
 
 namespace Rn.DnsUpdater.Services
 {
-  public interface IHeartbeatService
-  {
-    Task Tick();
-  }
-
   public class HeartbeatService : IHeartbeatService
   {
     private readonly ILoggerAdapter<HeartbeatService> _logger;
@@ -37,7 +32,7 @@ namespace Rn.DnsUpdater.Services
 
 
     // Interface methods
-    public async Task Tick()
+    public async Task TickAsync()
     {
       // TODO: [TESTS] (HeartbeatService.Tick) Add tests
       if(!CanRunHeartbeat())
@@ -48,7 +43,7 @@ namespace Rn.DnsUpdater.Services
         var runningTime = (_dateTime.Now - _startTime);
         _logger.Debug("Heartbeat - running for {time}", runningTime.ToString("g"));
 
-        await _metrics.SubmitBuilderAsync(new ServiceMetricBuilder(nameof(HeartbeatService), nameof(Tick))
+        await _metrics.SubmitBuilderAsync(new ServiceMetricBuilder(nameof(HeartbeatService), nameof(TickAsync))
           .WithCategory(MetricCategory.Heartbeat, MetricSubCategory.Tick)
           .WithCustomLong1((long) runningTime.TotalSeconds)
         );

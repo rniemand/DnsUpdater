@@ -8,17 +8,12 @@ using Rn.DnsUpdater.Metrics;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Common.Metrics.Builders;
-using Rn.NetCore.Common.Metrics.Interfaces;
 using Rn.NetCore.Common.Services;
+using Rn.NetCore.Metrics;
+using Rn.NetCore.Metrics.Builders;
 
 namespace Rn.DnsUpdater.Services
 {
-  public interface IHostIpAddressService
-  {
-    Task<bool> HostAddressChanged(CancellationToken stoppingToken);
-  }
-
   public class HostIpAddressService : IHostIpAddressService
   {
     private readonly ILoggerAdapter<HostIpAddressService> _logger;
@@ -49,9 +44,9 @@ namespace Rn.DnsUpdater.Services
 
 
     // Interface methods
-    public async Task<bool> HostAddressChanged(CancellationToken stoppingToken)
+    public async Task<bool> HostAddressChangedAsync(CancellationToken stoppingToken)
     {
-      // TODO: [TESTS] (HostIpAddressService.HostAddressChanged) Add tests
+      // TODO: [TESTS] (HostIpAddressService.HostAddressChangedAsync) Add tests
       var hostAddress = await GetHostAddress(stoppingToken);
 
       if (_lastHostAddress.IgnoreCaseEquals(hostAddress))

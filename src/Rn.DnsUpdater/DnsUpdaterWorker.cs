@@ -7,8 +7,8 @@ using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Common.Metrics.Builders;
-using Rn.NetCore.Common.Metrics.Interfaces;
+using Rn.NetCore.Metrics;
+using Rn.NetCore.Metrics.Builders;
 
 namespace Rn.DnsUpdater
 {
@@ -16,7 +16,7 @@ namespace Rn.DnsUpdater
   {
     private readonly ILoggerAdapter<DnsUpdaterWorker> _logger; 
     private readonly IHostIpAddressService _addressService;
-    private readonly IDnsUpdaterConfigService _configService;
+    private readonly IConfigService _configService;
     private readonly IDnsUpdaterService _dnsUpdater;
     private readonly IHeartbeatService _heartbeatService;
     private readonly IMetricService _metrics;
@@ -24,7 +24,7 @@ namespace Rn.DnsUpdater
     public DnsUpdaterWorker(
       ILoggerAdapter<DnsUpdaterWorker> logger,
       IHostIpAddressService addressService,
-      IDnsUpdaterConfigService configService,
+      IConfigService configService,
       IDnsUpdaterService dnsUpdater,
       IMetricService metrics,
       IHeartbeatService heartbeatService)
@@ -43,8 +43,8 @@ namespace Rn.DnsUpdater
       // TODO: [TESTS] (DnsUpdaterWorker.ExecuteAsync) Add tests
       while (!stoppingToken.IsCancellationRequested)
       {
-        await _heartbeatService.Tick();
-        var hostAddressChanged = await _addressService.HostAddressChanged(stoppingToken);
+        await _heartbeatService.TickAsync();
+        var hostAddressChanged = await _addressService.HostAddressChangedAsync(stoppingToken);
 
         // Decide if we need to update all entries, or just a smaller subset
         var dnsEntries = hostAddressChanged
@@ -83,7 +83,7 @@ namespace Rn.DnsUpdater
           foreach (var dnsEntry in dnsEntries)
           {
             builder.IncrementQueryCount();
-            await _dnsUpdater.UpdateDnsEntry(dnsEntry, stoppingToken);
+            await _dnsUpdater.UpdateEntryAsync(dnsEntry, stoppingToken);
           }
 
           _configService.SaveConfigState();

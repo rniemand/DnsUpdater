@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
 using Rn.NetCore.Common.Abstractions;
@@ -10,22 +9,12 @@ using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater.Services
 {
-  public interface IDnsUpdaterConfigService
+  public class ConfigService : IConfigService
   {
-    DnsUpdaterConfig CoreConfig { get; }
-    DnsEntriesConfig DnsEntriesConfig { get; }
+    public DnsUpdaterConfig CoreConfig { get; }
+    public DnsEntriesConfig DnsEntriesConfig { get; }
 
-    List<DnsUpdaterEntry> GetEntriesNeedingUpdate();
-    List<DnsUpdaterEntry> GetEnabledEntries();
-    void SaveConfigState();
-  }
-
-  public class DnsUpdaterConfigService : IDnsUpdaterConfigService
-  {
-    public DnsUpdaterConfig CoreConfig { get; private set; }
-    public DnsEntriesConfig DnsEntriesConfig { get; private set; }
-
-    private readonly ILoggerAdapter<DnsUpdaterConfigService> _logger;
+    private readonly ILoggerAdapter<ConfigService> _logger;
     private readonly IPathAbstraction _path;
     private readonly IDirectoryAbstraction _directory;
     private readonly IFileAbstraction _file;
@@ -33,20 +22,26 @@ namespace Rn.DnsUpdater.Services
     private readonly IDateTimeAbstraction _dateTime;
     private readonly IEnvironmentAbstraction _environment;
 
-    public DnsUpdaterConfigService(IServiceProvider serviceProvider)
+    public ConfigService(
+      ILoggerAdapter<ConfigService> logger,
+      IPathAbstraction path,
+      IDirectoryAbstraction directory,
+      IFileAbstraction file,
+      IJsonHelper jsonHelper,
+      IDateTimeAbstraction dateTime,
+      IEnvironmentAbstraction environment,
+      DnsUpdaterConfig config)
     {
-      // TODO: [TESTS] (DnsUpdaterConfigService) Add tests
-      _logger = serviceProvider.GetRequiredService<ILoggerAdapter<DnsUpdaterConfigService>>();
-      _path = serviceProvider.GetRequiredService<IPathAbstraction>();
-      _directory = serviceProvider.GetRequiredService<IDirectoryAbstraction>();
-      _file = serviceProvider.GetRequiredService<IFileAbstraction>();
-      _jsonHelper = serviceProvider.GetRequiredService<IJsonHelper>();
-      _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
-      _environment = serviceProvider.GetRequiredService<IEnvironmentAbstraction>();
+      // TODO: [TESTS] (ConfigService) Add tests
+      _logger = logger;
+      _path = path;
+      _directory = directory;
+      _file = file;
+      _jsonHelper = jsonHelper;
+      _dateTime = dateTime;
+      _environment = environment;
+      CoreConfig = config;
 
-      // Load all required configuration
-      CoreConfig = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
-      
       DnsEntriesConfig = LoadConfiguration(CoreConfig);
     }
 
@@ -54,7 +49,7 @@ namespace Rn.DnsUpdater.Services
     // Interface methods
     public List<DnsUpdaterEntry> GetEntriesNeedingUpdate()
     {
-      // TODO: [TESTS] (DnsUpdaterConfigService.GetEntriesNeedingUpdate) Add tests
+      // TODO: [TESTS] (ConfigService.GetEntriesNeedingUpdate) Add tests
       var now = _dateTime.Now;
 
       return DnsEntriesConfig.Entries
@@ -64,13 +59,13 @@ namespace Rn.DnsUpdater.Services
 
     public List<DnsUpdaterEntry> GetEnabledEntries()
     {
-      // TODO: [TESTS] (DnsUpdaterConfigService.GetEnabledEntries) Add tests
+      // TODO: [TESTS] (ConfigService.GetEnabledEntries) Add tests
       return DnsEntriesConfig.Entries.Where(e => e.Enabled).ToList();
     }
 
     public void SaveConfigState()
     {
-      // TODO: [TESTS] (DnsUpdaterConfigService.SaveConfigState) Add tests
+      // TODO: [TESTS] (ConfigService.SaveConfigState) Add tests
       if (!ShiftConfigFiles())
       {
         _logger.Error("Unable to manage configuration files, quitting!");
@@ -94,12 +89,12 @@ namespace Rn.DnsUpdater.Services
     // Internal methods
     private bool ShiftConfigFiles()
     {
-      // TODO: [TESTS] (DnsUpdaterConfigService.ShiftConfigFiles) Add tests
+      // TODO: [TESTS] (ConfigService.ShiftConfigFiles) Add tests
       try
       {
         var previousConfig = $"{CoreConfig.ConfigFile}.previous";
 
-        if(_file.Exists(previousConfig))
+        if (_file.Exists(previousConfig))
           _file.Delete(previousConfig);
 
         _file.Copy(CoreConfig.ConfigFile, previousConfig);
@@ -116,7 +111,7 @@ namespace Rn.DnsUpdater.Services
 
     private static bool NeedsUpdating(DnsUpdaterEntry entry, DateTime now)
     {
-      // TODO: [TESTS] (DnsUpdaterConfigService.NeedsUpdating) Add tests
+      // TODO: [TESTS] (ConfigService.NeedsUpdating) Add tests
       if (entry.Enabled == false)
         return false;
 
@@ -128,7 +123,7 @@ namespace Rn.DnsUpdater.Services
 
     private DnsEntriesConfig LoadConfiguration(DnsUpdaterConfig config)
     {
-      // TODO: [TESTS] (DnsUpdaterConfigService.LoadConfiguration) Add tests
+      // TODO: [TESTS] (ConfigService.LoadConfiguration) Add tests
       var configDir = _path.GetDirectoryName(config.ConfigFile);
 
       // Ensure that the configuration directory exists
@@ -153,7 +148,7 @@ namespace Rn.DnsUpdater.Services
 
     private static DnsEntriesConfig GenerateSampleConfig()
     {
-      // TODO: [TESTS] (DnsUpdaterConfigService.GenerateSampleConfig) Add tests
+      // TODO: [TESTS] (ConfigService.GenerateSampleConfig) Add tests
       return new DnsEntriesConfig
       {
         Entries = new[]

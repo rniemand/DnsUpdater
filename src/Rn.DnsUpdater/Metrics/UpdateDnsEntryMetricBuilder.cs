@@ -3,22 +3,12 @@ using System.Net.Http;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
 using Rn.NetCore.Common.Extensions;
-using Rn.NetCore.Common.Metrics;
-using Rn.NetCore.Common.Metrics.Enums;
-using Rn.NetCore.Common.Metrics.Interfaces;
-using Rn.NetCore.Common.Metrics.Models;
+using Rn.NetCore.Metrics.Builders;
+using Rn.NetCore.Metrics.Enums;
+using Rn.NetCore.Metrics.Models;
 
 namespace Rn.DnsUpdater.Metrics
 {
-  public interface IUpdateDnsEntryMetricBuilder : IMetricBuilder
-  {
-    IUpdateDnsEntryMetricBuilder WithCategory(string category, string subCategory, bool skipToLower = true);
-    IUpdateDnsEntryMetricBuilder ForDnsEntry(DnsUpdaterEntry dnsEntry);
-    IUpdateDnsEntryMetricBuilder WithResponse(HttpResponseMessage response);
-    IMetricTimingToken WithTiming();
-    void WithException(Exception ex);
-  }
-
   public class NullUpdateDnsEntryMetricBuilder : IUpdateDnsEntryMetricBuilder
   {
     public bool IsNullMetricBuilder { get; }
