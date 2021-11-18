@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Net.Http;
 using Rn.DnsUpdater.Config;
-using Rn.NetCore.Common.Metrics.Interfaces;
+using Rn.NetCore.Metrics.Builders;
+using Rn.NetCore.Metrics.Models;
 
 namespace Rn.DnsUpdater.Metrics
 {

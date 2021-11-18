@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Rn.DnsUpdater.Enums;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Common.Metrics.Builders;
-using Rn.NetCore.Common.Metrics.Interfaces;
+using Rn.NetCore.Metrics;
+using Rn.NetCore.Metrics.Builders;
 
 namespace Rn.DnsUpdater.Services
 {

@@ -7,8 +7,8 @@ using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Common.Metrics.Builders;
-using Rn.NetCore.Common.Metrics.Interfaces;
+using Rn.NetCore.Metrics;
+using Rn.NetCore.Metrics.Builders;
 
 namespace Rn.DnsUpdater
 {

@@ -8,9 +8,9 @@ using Rn.DnsUpdater.Metrics;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Common.Metrics.Builders;
-using Rn.NetCore.Common.Metrics.Interfaces;
 using Rn.NetCore.Common.Services;
+using Rn.NetCore.Metrics;
+using Rn.NetCore.Metrics.Builders;
 
 namespace Rn.DnsUpdater.Services
 {
