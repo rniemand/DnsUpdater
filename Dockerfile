@@ -1,7 +1,10 @@
-FROM mcr.microsoft.com/dotnet/runtime:5.0-buster-slim AS base
+# hub.docker.com/_/microsoft-dotnet-sdk
+# https://hub.docker.com/_/microsoft-dotnet-a
+
+FROM mcr.microsoft.com/dotnet/runtime:6.0-bullseye-slim AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-bullseye-slim AS build
 WORKDIR /src
 
 COPY ["/src/Rn.DnsUpdater/Rn.DnsUpdater.csproj", "Rn.DnsUpdater/"]
