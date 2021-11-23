@@ -9,9 +9,9 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
-    <PackageReference Include="Rn.NetCore.Common" Version="5.0.1.152" />
-    <PackageReference Include="Rn.NetCore.Metrics" Version="5.0.0.101" />
-    <PackageReference Include="Rn.NetCore.Metrics.Rabbit" Version="5.0.1.118" />
+    <PackageReference Include="Rn.NetCore.Common" Version="6.0.0.100" />
+    <PackageReference Include="Rn.NetCore.Metrics" Version="6.0.0.100" />
+    <PackageReference Include="Rn.NetCore.Metrics.Rabbit" Version="6.0.0.100" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="nlog.config">
