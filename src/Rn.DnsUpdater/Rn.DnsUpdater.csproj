@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker;Microsoft.NET.Sdk.Publish">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>dotnet-Rn.DnsUpdater-CE13F2DF-C1D6-4D34-B1BE-EC023377D726</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DocumentSink.ClientLib" Version="1.0.131" />
+    <PackageReference Include="DocumentSink.ClientLib" Version="6.0.100" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
-    <PackageReference Include="Rn.NetCore.Common" Version="5.0.1.152" />
-    <PackageReference Include="Rn.NetCore.Metrics" Version="5.0.0.101" />
-    <PackageReference Include="Rn.NetCore.Metrics.Rabbit" Version="5.0.1.118" />
+    <PackageReference Include="Rn.NetCore.BasicHttp" Version="6.0.0.100" />
+    <PackageReference Include="Rn.NetCore.Common" Version="6.0.0.100" />
+    <PackageReference Include="Rn.NetCore.Metrics" Version="6.0.0.100" />
+    <PackageReference Include="Rn.NetCore.Metrics.Rabbit" Version="6.0.0.100" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="nlog.config">
