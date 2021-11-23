@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
 using Rn.DnsUpdater.Metrics;
+using Rn.NetCore.BasicHttp;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Common.Services;
 using Rn.NetCore.Metrics;
 using Rn.NetCore.Metrics.Builders;
 
