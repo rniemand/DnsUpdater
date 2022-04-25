@@ -9,6 +9,7 @@ using NLog;
 using NLog.Extensions.Logging;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Services;
+using Rn.DnsUpdater.Services.Interfaces;
 using Rn.NetCore.BasicHttp;
 using Rn.NetCore.BasicHttp.Factories;
 using Rn.NetCore.Common.Abstractions;
