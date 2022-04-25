@@ -66,7 +66,7 @@ public class HostIpAddressService : IHostIpAddressService
   private bool HostAddressNeedsUpdating()
   {
     // TODO: [TESTS] (HostIpAddressService.HostAddressNeedsUpdating) Add tests
-    if (_nextUpdate.HasValue == false)
+    if (!_nextUpdate.HasValue)
       return true;
 
     return !(_nextUpdate > _dateTime.Now);

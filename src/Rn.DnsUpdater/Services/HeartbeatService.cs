@@ -61,7 +61,7 @@ public class HeartbeatService : IHeartbeatService
   private bool CanRunHeartbeat()
   {
     // TODO: [TESTS] (HeartbeatService.CanRunHeartbeat) Add tests
-    if (_nextTick.HasValue == false)
+    if (!_nextTick.HasValue)
       return true;
 
     return !(_nextTick > _dateTime.Now);

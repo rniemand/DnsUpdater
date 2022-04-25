@@ -1,6 +1,6 @@
 ﻿namespace Rn.DnsUpdater.Metrics;
 
-public class MetricPlaceholder
+public static class MetricPlaceholder
 {
   public const string Null = "(null)";
   public const string None = "(none)";

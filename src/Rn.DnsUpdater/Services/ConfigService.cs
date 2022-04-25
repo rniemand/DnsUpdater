@@ -112,7 +112,7 @@ public class ConfigService : IConfigService
   private static bool NeedsUpdating(DnsUpdaterEntry entry, DateTime now)
   {
     // TODO: [TESTS] (ConfigService.NeedsUpdating) Add tests
-    if (entry.Enabled == false)
+    if (!entry.Enabled)
       return false;
 
     if (!entry.NextUpdate.HasValue)

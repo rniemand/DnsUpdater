@@ -3,7 +3,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>dotnet-Rn.DnsUpdater-CE13F2DF-C1D6-4D34-B1BE-EC023377D726</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <CodeAnalysisRuleSet>..\.sonarlint\dns-updatercsharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="..\.sonarlint\dns-updater\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DocumentSink.ClientLib" Version="6.0.100" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />

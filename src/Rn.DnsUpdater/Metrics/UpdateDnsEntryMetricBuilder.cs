@@ -112,7 +112,7 @@ public class UpdateDnsEntryMetricBuilder : MetricBuilderBase, IUpdateDnsEntryMet
 
 
   // Misc.
-  public class Tags
+  public static class Tags
   {
     public const string EntryName = "entry";
     public const string EntryType = "entry_type";
@@ -121,7 +121,7 @@ public class UpdateDnsEntryMetricBuilder : MetricBuilderBase, IUpdateDnsEntryMet
     public const string ResponseCode = "response_code";
   }
 
-  public class Fields
+  public static class Fields
   {
     public const string UpdateInterval = "update_interval";
     public const string UpdateTimeout = "update_timeout";
