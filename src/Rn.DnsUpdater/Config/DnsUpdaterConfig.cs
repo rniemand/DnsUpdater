@@ -1,28 +1,27 @@
 ﻿using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
-namespace Rn.DnsUpdater.Config
+namespace Rn.DnsUpdater.Config;
+
+public class DnsUpdaterConfig
 {
-  public class DnsUpdaterConfig
+  [JsonProperty("ConfigFile"), JsonPropertyName("ConfigFile")]
+  public string ConfigFile { get; set; }
+
+  [JsonProperty("TickInterval"), JsonPropertyName("TickInterval")]
+  public int TickInterval { get; set; }
+
+  [JsonProperty("UpdateHostIpIntervalMin"), JsonPropertyName("UpdateHostIpIntervalMin")]
+  public int UpdateHostIpIntervalMin { get; set; }
+
+  [JsonProperty("DefaultHttpTimeoutMs"), JsonPropertyName("DefaultHttpTimeoutMs")]
+  public int DefaultHttpTimeoutMs { get; set; }
+
+  public DnsUpdaterConfig()
   {
-    [JsonProperty("ConfigFile"), JsonPropertyName("ConfigFile")]
-    public string ConfigFile { get; set; }
-
-    [JsonProperty("TickInterval"), JsonPropertyName("TickInterval")]
-    public int TickInterval { get; set; }
-
-    [JsonProperty("UpdateHostIpIntervalMin"), JsonPropertyName("UpdateHostIpIntervalMin")]
-    public int UpdateHostIpIntervalMin { get; set; }
-
-    [JsonProperty("DefaultHttpTimeoutMs"), JsonPropertyName("DefaultHttpTimeoutMs")]
-    public int DefaultHttpTimeoutMs { get; set; }
-
-    public DnsUpdaterConfig()
-    {
-      ConfigFile = "./dns.config.json";
-      TickInterval = 5000;
-      UpdateHostIpIntervalMin = 10;
-      DefaultHttpTimeoutMs = 5000;
-    }
+    ConfigFile = "./dns.config.json";
+    TickInterval = 5000;
+    UpdateHostIpIntervalMin = 10;
+    DefaultHttpTimeoutMs = 5000;
   }
 }

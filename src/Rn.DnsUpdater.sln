@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31005.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32414.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rn.DnsUpdater", "Rn.DnsUpdater\Rn.DnsUpdater.csproj", "{8835C44E-9BE2-47CD-AAAB-24287B467018}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{6704CFA4-F49C-43AA-9853-F06C53FD5341}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6704CFA4-F49C-43AA-9853-F06C53FD5341}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rn.DnsUpdater.T1.Tests", "Rn.DnsUpdater.T1.Tests\Rn.DnsUpdater.T1.Tests.csproj", "{9F5F08AD-A0DA-43C5-A228-AD867029F906}"
 EndProject

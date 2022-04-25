@@ -1,0 +1,12 @@
+{
+  "ServerUri": "http://192.168.0.60:9001",
+  "Organization": null,
+  "ProjectKey": "dns-updater",
+  "ProjectName": "dns-updater",
+  "Profiles": {
+    "CSharp": {
+      "ProfileKey": "AXqC5zqcvHWj8UR6w9J8",
+      "ProfileTimestamp": "2021-11-23T21:43:46Z"
+    }
+  }
+}
