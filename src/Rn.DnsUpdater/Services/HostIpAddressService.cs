@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
 using Rn.DnsUpdater.Metrics;
@@ -25,18 +26,14 @@ public class HostIpAddressService : IHostIpAddressService
   private string _lastHostAddress;
   private DateTime? _nextUpdate;
 
-  public HostIpAddressService(
-    ILoggerAdapter<HostIpAddressService> logger, 
-    IBasicHttpService httpService,
-    IDateTimeAbstraction dateTime,
-    IMetricService metrics,
-    DnsUpdaterConfig config)
+  public HostIpAddressService(IServiceProvider serviceProvider)
   {
-    _logger = logger;
-    _httpService = httpService;
-    _config = config;
-    _metrics = metrics;
-    _dateTime = dateTime;
+    // TODO: [HostIpAddressService] (TESTS) Add tests
+    _logger = serviceProvider.GetRequiredService<ILoggerAdapter<HostIpAddressService>>();
+    _httpService = serviceProvider.GetRequiredService<IBasicHttpService>();
+    _config = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
+    _metrics = serviceProvider.GetRequiredService<IMetricService>();
+    _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
 
     _lastHostAddress = string.Empty;
     _nextUpdate = null;
