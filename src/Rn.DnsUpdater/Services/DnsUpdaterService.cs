@@ -60,7 +60,7 @@ namespace Rn.DnsUpdater.Services
     private void HandleMissingUpdater(DnsUpdaterEntry entry)
     {
       // TODO: [TESTS] (DnsUpdaterService.HandleMissingUpdater) Add tests
-      _logger.Error("No updater found for DnsEntry type '{type}'",
+      _logger.LogError("No updater found for DnsEntry type '{type}'",
         entry.Type.ToString("G")
       );
     }
@@ -83,7 +83,7 @@ namespace Rn.DnsUpdater.Services
           var responseBody = await response.Content.ReadAsStringAsync(stoppingToken);
           builder.WithResponse(response);
 
-          _logger.Info("Update response for {entryName}: ({code}) {body}",
+          _logger.LogInformation("Update response for {entryName}: ({code}) {body}",
             entry.Name,
             (int) response.StatusCode,
             responseBody

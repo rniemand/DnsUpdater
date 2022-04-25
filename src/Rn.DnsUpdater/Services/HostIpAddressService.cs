@@ -52,7 +52,7 @@ namespace Rn.DnsUpdater.Services
       if (_lastHostAddress.IgnoreCaseEquals(hostAddress))
         return false;
 
-      _logger.Info("Host IP Address changed from '{old}' to '{new}'",
+      _logger.LogInformation("Host IP Address changed from '{old}' to '{new}'",
         _lastHostAddress.FallbackTo("(none)"),
         hostAddress
       );
@@ -94,7 +94,7 @@ namespace Rn.DnsUpdater.Services
           const string url = "https://api.ipify.org/";
           var timeout = _config.DefaultHttpTimeoutMs;
 
-          _logger.Info("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
+          _logger.LogInformation("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
           builder.WithCustomInt1(timeout);
 
           var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -112,7 +112,7 @@ namespace Rn.DnsUpdater.Services
             return hostIpAddress;
           }
 
-          _logger.Warning("Got empty response, returning old IP Address to be safe");
+          _logger.LogWarning("Got empty response, returning old IP Address to be safe");
           return _lastHostAddress;
         }
       }

@@ -41,7 +41,7 @@ namespace Rn.DnsUpdater.Services
       try
       {
         var runningTime = (_dateTime.Now - _startTime);
-        _logger.Debug("Heartbeat - running for {time}", runningTime.ToString("g"));
+        _logger.LogDebug("Heartbeat - running for {time}", runningTime.ToString("g"));
 
         await _metrics.SubmitBuilderAsync(new ServiceMetricBuilder(nameof(HeartbeatService), nameof(TickAsync))
           .WithCategory(MetricCategory.Heartbeat, MetricSubCategory.Tick)

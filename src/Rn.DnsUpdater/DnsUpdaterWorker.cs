@@ -67,10 +67,9 @@ namespace Rn.DnsUpdater
       if (dnsEntries.Count == 0)
         return;
 
-      _logger.Info(dnsEntries.Count == 1
+      _logger.LogInformation(dnsEntries.Count == 1
         ? "Updating 1 DNS entry"
-        : $"Updating {dnsEntries.Count} DNS entries"
-      );
+        : $"Updating {dnsEntries.Count} DNS entries");
 
       var builder = new ServiceMetricBuilder(nameof(DnsUpdaterWorker), nameof(UpdateDnsEntries))
         .WithCategory(MetricCategory.DnsUpdater, MetricSubCategory.UpdateEntries)

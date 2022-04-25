@@ -6,13 +6,13 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DocumentSink.ClientLib" Version="6.0.100" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
-    <PackageReference Include="Rn.NetCore.BasicHttp" Version="6.0.0.100" />
-    <PackageReference Include="Rn.NetCore.Common" Version="6.0.0.100" />
-    <PackageReference Include="Rn.NetCore.Metrics" Version="6.0.0.100" />
-    <PackageReference Include="Rn.NetCore.Metrics.Rabbit" Version="6.0.0.100" />
+    <PackageReference Include="Rn.NetCore.BasicHttp" Version="6.0.0.102" />
+    <PackageReference Include="Rn.NetCore.Common" Version="6.0.0.108" />
+    <PackageReference Include="Rn.NetCore.Metrics" Version="6.0.0.102" />
+    <PackageReference Include="Rn.NetCore.Metrics.Rabbit" Version="6.0.0.103" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="nlog.config">
