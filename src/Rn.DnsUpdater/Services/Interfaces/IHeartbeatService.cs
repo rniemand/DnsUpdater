@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Rn.DnsUpdater.Services
+namespace Rn.DnsUpdater.Services;
+
+public interface IHeartbeatService
 {
-  public interface IHeartbeatService
-  {
-    Task TickAsync();
-  }
+  Task TickAsync();
 }

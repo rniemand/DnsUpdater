@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using Rn.DnsUpdater.Config;
 
-namespace Rn.DnsUpdater.Services
+namespace Rn.DnsUpdater.Services;
+
+public interface IDnsUpdaterService
 {
-  public interface IDnsUpdaterService
-  {
-    Task UpdateEntryAsync(DnsUpdaterEntry entry, CancellationToken stoppingToken);
-  }
+  Task UpdateEntryAsync(DnsUpdaterEntry entry, CancellationToken stoppingToken);
 }

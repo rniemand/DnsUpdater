@@ -1,10 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Rn.DnsUpdater.Services
+namespace Rn.DnsUpdater.Services;
+
+public interface IHostIpAddressService
 {
-  public interface IHostIpAddressService
-  {
-    Task<bool> HostAddressChangedAsync(CancellationToken stoppingToken);
-  }
+  Task<bool> HostAddressChangedAsync(CancellationToken stoppingToken);
 }

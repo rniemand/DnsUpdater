@@ -1,9 +1,8 @@
-﻿namespace Rn.DnsUpdater.Enums
+﻿namespace Rn.DnsUpdater.Enums;
+
+public static class MetricCategory
 {
-  public static class MetricCategory
-  {
-    public const string DnsUpdater = "DnsUpdater";
-    public const string Heartbeat = "Heartbeat";
-    public const string HostIpAddress = "HostIpAddress";
-  }
+  public const string DnsUpdater = "DnsUpdater";
+  public const string Heartbeat = "Heartbeat";
+  public const string HostIpAddress = "HostIpAddress";
 }

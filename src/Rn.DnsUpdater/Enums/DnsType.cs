@@ -1,8 +1,7 @@
-﻿namespace Rn.DnsUpdater.Enums
+﻿namespace Rn.DnsUpdater.Enums;
+
+public enum DnsType
 {
-  public enum DnsType
-  {
-    Unspecified = 0,
-    FreeDns = 1
-  }
+  Unspecified = 0,
+  FreeDns = 1
 }
