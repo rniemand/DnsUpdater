@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Config;
 using Rn.DnsUpdater.Enums;
 using Rn.DnsUpdater.Metrics;
@@ -20,18 +21,14 @@ public class DnsUpdaterService : IDnsUpdaterService
   private readonly IMetricService _metrics;
   private readonly DnsUpdaterConfig _config;
 
-  public DnsUpdaterService(
-    ILoggerAdapter<DnsUpdaterService> logger,
-    IDateTimeAbstraction dateTime,
-    IBasicHttpService httpService,
-    IMetricService metrics,
-    DnsUpdaterConfig config)
+  public DnsUpdaterService(IServiceProvider serviceProvider)
   {
-    _logger = logger;
-    _dateTime = dateTime;
-    _httpService = httpService;
-    _config = config;
-    _metrics = metrics;
+    // TODO: [DnsUpdaterService] (TESTS) Add tests
+    _logger = serviceProvider.GetRequiredService<ILoggerAdapter<DnsUpdaterService>>();
+    _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
+    _httpService = serviceProvider.GetRequiredService<IBasicHttpService>();
+    _config = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
+    _metrics = serviceProvider.GetRequiredService<IMetricService>();
   }
 
 
@@ -85,7 +82,7 @@ public class DnsUpdaterService : IDnsUpdaterService
 
         _logger.LogInformation("Update response for {entryName}: ({code}) {body}",
           entry.Name,
-          (int) response.StatusCode,
+          (int)response.StatusCode,
           responseBody
         );
       }

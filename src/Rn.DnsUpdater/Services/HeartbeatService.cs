@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Enums;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Logging;
@@ -17,17 +18,15 @@ public class HeartbeatService : IHeartbeatService
   private DateTime? _nextTick;
   private readonly DateTime _startTime;
 
-  public HeartbeatService(
-    ILoggerAdapter<HeartbeatService> logger, 
-    IMetricService metrics, 
-    IDateTimeAbstraction dateTime)
+  public HeartbeatService(IServiceProvider serviceProvider)
   {
-    _logger = logger;
-    _metrics = metrics;
-    _dateTime = dateTime;
-      
+    // TODO: [HeartbeatService.HeartbeatService] (TESTS) Add tests
+    _logger = serviceProvider.GetRequiredService<ILoggerAdapter<HeartbeatService>>();
+    _metrics = serviceProvider.GetRequiredService<IMetricService>();
+    _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
+
     _nextTick = null;
-    _startTime = dateTime.Now;
+    _startTime = _dateTime.Now;
   }
 
 
@@ -35,7 +34,7 @@ public class HeartbeatService : IHeartbeatService
   public async Task TickAsync()
   {
     // TODO: [TESTS] (HeartbeatService.Tick) Add tests
-    if(!CanRunHeartbeat())
+    if (!CanRunHeartbeat())
       return;
 
     try
@@ -45,7 +44,7 @@ public class HeartbeatService : IHeartbeatService
 
       await _metrics.SubmitBuilderAsync(new ServiceMetricBuilder(nameof(HeartbeatService), nameof(TickAsync))
         .WithCategory(MetricCategory.Heartbeat, MetricSubCategory.Tick)
-        .WithCustomLong1((long) runningTime.TotalSeconds)
+        .WithCustomLong1((long)runningTime.TotalSeconds)
       );
     }
     catch (Exception ex)
