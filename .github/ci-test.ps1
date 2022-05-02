@@ -14,7 +14,7 @@ param (
   [string] $frameworkVersion = "net5.0"
 )
 
-$rootDir               = Join-Path $rootDir "\";
+$rootDir               = Join-Path $rootDir ".\..\";
 $sourceDir             = Join-Path $rootDir "src\";
 $publishDir            = Join-Path $rootDir "artifacts\";
 $toolsDir              = Join-Path $rootDir "tools\";

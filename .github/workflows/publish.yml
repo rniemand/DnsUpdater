@@ -67,8 +67,8 @@ jobs:
           );
           
           Invoke-Expression (".\.sonar\scanner\dotnet-sonarscanner begin $sonarQubeParams");
-          Invoke-Expression (".\ci-build.ps1 -project `"$projectName`"");
-          Invoke-Expression (".\ci-test.ps1 -frameworkVersion `"net6.0`"");
+          Invoke-Expression (".\.github\ci-build.ps1 -project `"$projectName`"");
+          Invoke-Expression (".\.github\ci-test.ps1 -frameworkVersion `"net6.0`"");
           Invoke-Expression (".\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login=`"${{ secrets.SONAR_TOKEN }}`"");
           
           # Fin.
