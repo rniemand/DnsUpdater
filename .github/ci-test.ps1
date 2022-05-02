@@ -11,10 +11,10 @@ param (
   [string] $configuration = "Release",
 
   [Parameter(Mandatory=$false)]
-  [string] $frameworkVersion = "net5.0"
+  [string] $frameworkVersion = "net6.0"
 )
 
-$rootDir               = Join-Path $rootDir ".\..\";
+$rootDir               = [IO.Path]::GetFullPath((Join-Path $rootDir "\..\"));
 $sourceDir             = Join-Path $rootDir "src\";
 $publishDir            = Join-Path $rootDir "artifacts\";
 $toolsDir              = Join-Path $rootDir "tools\";

@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - master
+
+env:
+  PROJECT_NAME: "Rn.DnsUpdater"
+
 jobs:
   build:
     name: Build and Publish
@@ -17,15 +21,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-dotnet@v1
-        name: Install .net 5.x
-        with:
-          dotnet-version: '5.0.x'
-
-      - uses: actions/setup-dotnet@v1
+      - uses: actions/setup-dotnet@v2
         name: Install .net 6.x
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: 6.0.x
 
       - name: Cache SonarQube packages
         uses: actions/cache@v1
@@ -57,7 +56,7 @@ jobs:
           $rootDir         = Join-Path $env:GITHUB_WORKSPACE "\";
           $artifactsDir    = Join-Path $rootDir "artifacts\";
           $sqReportPaths   = ($artifactsDir + "t1-coverage/**/coverage.opencover.xml");
-          $projectName     = "Rn.DnsUpdater";
+          $projectName     = "${{ env.PROJECT_NAME }}";
           
           $sonarQubeParams = @(
             "/k:`"${{ secrets.SONAR_PROJECT }}`"",

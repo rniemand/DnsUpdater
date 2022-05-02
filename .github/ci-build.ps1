@@ -9,7 +9,7 @@ param (
   [string] $configuration = "Release"
 )
 
-$rootDir          = Join-Path $rootDir "\..\";
+$rootDir          = [IO.Path]::GetFullPath((Join-Path $rootDir "\..\"));
 $sourceDir        = Join-Path $rootDir "src\";
 $projectRootDir   = Join-Path $sourceDir ($project + "\");
 $artifactDir      = Join-Path $rootDir "artifacts\";
