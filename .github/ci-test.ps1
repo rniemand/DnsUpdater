@@ -1,5 +1,3 @@
-# MANUAL :: .\ci-test.ps1 -output (pwd)
-
 param (
   [Parameter(Mandatory=$false)]
   [string] $rootDir = $PSScriptRoot,
@@ -15,7 +13,7 @@ param (
 )
 
 $rootDir               = [IO.Path]::GetFullPath((Join-Path $rootDir "\..\"));
-$sourceDir             = Join-Path $rootDir "src\";
+$sourceDir             = Join-Path $rootDir "test\";
 $publishDir            = Join-Path $rootDir "artifacts\";
 $toolsDir              = Join-Path $rootDir "tools\";
 $testPublishDir        = Join-Path $publishDir "t1-publish\";

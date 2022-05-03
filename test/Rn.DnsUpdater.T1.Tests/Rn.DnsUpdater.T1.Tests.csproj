@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rn.DnsUpdater\Rn.DnsUpdater.csproj" />
+    <ProjectReference Include="..\..\src\Rn.DnsUpdater\Rn.DnsUpdater.csproj" />
   </ItemGroup>
 
 </Project>
