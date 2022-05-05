@@ -42,3 +42,7 @@ _replace this with your change information here_
 
 - This PR fixes or closes issue: fixes #
 - Link to relevant existing code or pull request: 
+
+<!--(Rn.BuildScriptHelper){
+	"version": "1.0.106"
+}(END)-->

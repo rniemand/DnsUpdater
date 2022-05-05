@@ -240,3 +240,7 @@ _Pvt_Extensions
 .fake/
 
 src/OnCall\.ApplicationDB/OnCall\.ApplicationDB\.jfm
+
+#(Rn.BuildScriptHelper){
+#  "version": "1.0.106"
+#}(END)
