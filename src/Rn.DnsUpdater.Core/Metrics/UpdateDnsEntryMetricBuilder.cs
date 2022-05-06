@@ -1,13 +1,12 @@
-﻿using System;
-using System.Net.Http;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Enums;
+using Rn.DnsUpdater.Core.Metrics.Interfaces;
 using Rn.NetCore.Common.Extensions;
 using Rn.NetCore.Metrics.Builders;
 using Rn.NetCore.Metrics.Enums;
 using Rn.NetCore.Metrics.Models;
 
-namespace Rn.DnsUpdater.Metrics;
+namespace Rn.DnsUpdater.Core.Metrics;
 
 public class NullUpdateDnsEntryMetricBuilder : IUpdateDnsEntryMetricBuilder
 {
