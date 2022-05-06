@@ -14,7 +14,7 @@ namespace Rn.DnsUpdater;
 
 public class DnsUpdaterWorker : BackgroundService
 {
-  private readonly ILoggerAdapter<DnsUpdaterWorker> _logger; 
+  private readonly ILoggerAdapter<DnsUpdaterWorker> _logger;
   private readonly IHostIpAddressService _addressService;
   private readonly IConfigService _configService;
   private readonly IDnsUpdaterService _dnsUpdater;
@@ -29,7 +29,7 @@ public class DnsUpdaterWorker : BackgroundService
     IMetricService metrics,
     IHeartbeatService heartbeatService)
   {
-    _logger = logger; 
+    _logger = logger;
     _addressService = addressService;
     _configService = configService;
     _dnsUpdater = dnsUpdater;
