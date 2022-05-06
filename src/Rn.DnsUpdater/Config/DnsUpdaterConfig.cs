@@ -1,27 +1,19 @@
-﻿using System.Text.Json.Serialization;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace Rn.DnsUpdater.Config;
 
+// DOCS: docs\configuration\appsettings.md
 public class DnsUpdaterConfig
 {
-  [JsonProperty("ConfigFile"), JsonPropertyName("ConfigFile")]
-  public string ConfigFile { get; set; }
+  [ConfigurationKeyName("configFile")]
+  public string ConfigFile { get; set; } = "./dns.config.json";
 
-  [JsonProperty("TickInterval"), JsonPropertyName("TickInterval")]
-  public int TickInterval { get; set; }
+  [ConfigurationKeyName("tickInterval")]
+  public int TickInterval { get; set; } = 5000;
 
-  [JsonProperty("UpdateHostIpIntervalMin"), JsonPropertyName("UpdateHostIpIntervalMin")]
-  public int UpdateHostIpIntervalMin { get; set; }
+  [ConfigurationKeyName("updateHostIpIntervalMin")]
+  public int UpdateHostIpIntervalMin { get; set; } = 10;
 
-  [JsonProperty("DefaultHttpTimeoutMs"), JsonPropertyName("DefaultHttpTimeoutMs")]
-  public int DefaultHttpTimeoutMs { get; set; }
-
-  public DnsUpdaterConfig()
-  {
-    ConfigFile = "./dns.config.json";
-    TickInterval = 5000;
-    UpdateHostIpIntervalMin = 10;
-    DefaultHttpTimeoutMs = 5000;
-  }
+  [ConfigurationKeyName("defaultHttpTimeoutMs")]
+  public int DefaultHttpTimeoutMs { get; set; } = 5000;
 }

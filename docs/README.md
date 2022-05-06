@@ -1,9 +1,9 @@
 [Home](/README.md) / Docs
 
 # Documentation
-Starter documentation for `DnsUpdater`.
+Covers everything you need to know about the `DnsUpdater` application.
 
-More to come...
+- [Configuration](/docs/configuration/README.md) - covers basic configuration of the application
 
 <!--(Rn.BuildScriptHelper){
 	"version": "1.0.106",
