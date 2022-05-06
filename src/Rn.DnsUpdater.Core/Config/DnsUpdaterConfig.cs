@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace Rn.DnsUpdater.Config;
+namespace Rn.DnsUpdater.Core.Config;
 
 // DOCS: docs\configuration\appsettings.md
 public class DnsUpdaterConfig

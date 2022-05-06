@@ -5,8 +5,6 @@ VisualStudioVersion = 17.2.32414.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rn.DnsUpdater", "Rn.DnsUpdater\Rn.DnsUpdater.csproj", "{46AA8F90-DFA0-4EBC-A243-DBB8C56082E8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6704CFA4-F49C-43AA-9853-F06C53FD5341}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rn.DnsUpdater.T1.Tests", "..\test\Rn.DnsUpdater.T1.Tests\Rn.DnsUpdater.T1.Tests.csproj", "{93F089DD-1B0E-4252-9118-0FE5AD947208}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rn.DnsUpdater.Core", "Rn.DnsUpdater.Core\Rn.DnsUpdater.Core.csproj", "{704DCEA7-2E6F-4456-BC09-F3D78BB3F386}"
@@ -36,7 +34,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{93F089DD-1B0E-4252-9118-0FE5AD947208} = {6704CFA4-F49C-43AA-9853-F06C53FD5341}
+		{93F089DD-1B0E-4252-9118-0FE5AD947208} = {857D2233-8438-40E2-B2D4-665C3602882D}
 		{704DCEA7-2E6F-4456-BC09-F3D78BB3F386} = {857D2233-8438-40E2-B2D4-665C3602882D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

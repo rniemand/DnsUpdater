@@ -1,4 +1,4 @@
-﻿namespace Rn.DnsUpdater.Enums;
+﻿namespace Rn.DnsUpdater.Core.Enums;
 
 public static class MetricCategory
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
-using Rn.DnsUpdater.Config;
-using Rn.DnsUpdater.Enums;
+using Rn.DnsUpdater.Core.Config;
+using Rn.DnsUpdater.Core.Enums;
 using Rn.NetCore.Common.Extensions;
 using Rn.NetCore.Metrics.Builders;
 using Rn.NetCore.Metrics.Enums;

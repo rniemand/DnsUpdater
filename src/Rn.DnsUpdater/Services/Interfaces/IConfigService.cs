@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Rn.DnsUpdater.Config;
+using Rn.DnsUpdater.Core.Config;
 
 namespace Rn.DnsUpdater.Services;
 

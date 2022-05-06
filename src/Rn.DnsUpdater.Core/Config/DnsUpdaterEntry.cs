@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
-using Rn.DnsUpdater.Enums;
+using Rn.DnsUpdater.Core.Enums;
 
-namespace Rn.DnsUpdater.Config;
+namespace Rn.DnsUpdater.Core.Config;
 
 public class DnsUpdaterEntry
 {

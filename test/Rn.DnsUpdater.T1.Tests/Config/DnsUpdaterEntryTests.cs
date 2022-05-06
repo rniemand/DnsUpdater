@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
-using Rn.DnsUpdater.Config;
-using Rn.DnsUpdater.Enums;
+using Rn.DnsUpdater.Core.Config;
+using Rn.DnsUpdater.Core.Enums;
 
 namespace Rn.DnsUpdater.T1.Tests.Config;
 
