@@ -10,7 +10,6 @@
     <Content Include="..\.sonarlint\dns-updater\CSharp\SonarLint.xml" Link="SonarLint.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DocumentSink.ClientLib" Version="6.0.101" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
