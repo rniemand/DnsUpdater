@@ -1,6 +1,4 @@
 using System;
-using DocumentSink.ClientLib;
-using DocumentSink.ClientLib.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -51,10 +49,7 @@ public class Program
           // Config
           .AddSingleton(GenerateConfig(hostContext))
           .AddSingleton(hostContext.Configuration)
-
-          // Clients
-          .AddSingleton<IDocumentSinkClient, DocumentSinkClient>()
-
+          
           // Services
           .AddSingleton<IHostIpAddressService, HostIpAddressService>()
           .AddSingleton<IBasicHttpService, BasicHttpService>()
@@ -83,7 +78,7 @@ public class Program
           .AddSingleton<IRabbitFactory, RabbitFactory>()
 
           // Logging
-          .AddSingleton(typeof(ILoggerAdapter<>), typeof(DocumentSinkLoggerAdapter<>))
+          .AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>))
           .AddLogging(loggingBuilder =>
           {
             // configure Logging with NLog

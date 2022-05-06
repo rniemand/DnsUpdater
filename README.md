@@ -1,9 +1,11 @@
 # DnsUpdater
-Generic DynamicDNS updating service written in C#
+Generic DynamicDNS updating service written in `C#`.
 
-Source code for the project can be found [here](https://github.com/rniemand/DnsUpdater).
+Developer documentation can be found [here](/docs/README.md).
+
+Information about configuring `DnsUpdater` can be found [here](/docs/configuration/README.md).
 
 <!--(Rn.BuildScriptHelper){
 	"version": "1.0.106",
-	"replace": true
+	"replace": false
 }(END)-->
