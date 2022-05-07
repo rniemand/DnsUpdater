@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
+using Rn.DnsUpdater.Core;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Services;
 using Rn.DnsUpdater.Core.Services.Interfaces;
@@ -89,6 +90,7 @@ public class Program
           })
 
           // Workers
+          .AddSingleton<IDnsUpdateRunner, DnsUpdateRunner>()
           .AddHostedService<DnsUpdaterWorker>();
       });
 
