@@ -33,9 +33,7 @@ public class HostIpAddressService : IHostIpAddressService
     _lastHostAddress = string.Empty;
     _nextUpdate = null;
   }
-
-
-  // Interface methods
+  
   public async Task<bool> HostAddressChangedAsync(CancellationToken stoppingToken)
   {
     // TODO: [TESTS] (HostIpAddressService.HostAddressChangedAsync) Add tests
@@ -52,9 +50,7 @@ public class HostIpAddressService : IHostIpAddressService
     _lastHostAddress = hostAddress.LowerTrim();
     return true;
   }
-
-
-  // Internal methods
+  
   private bool HostAddressNeedsUpdating()
   {
     // TODO: [TESTS] (HostIpAddressService.HostAddressNeedsUpdating) Add tests

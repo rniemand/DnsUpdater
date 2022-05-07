@@ -27,9 +27,7 @@ public class DnsUpdaterService : IDnsUpdaterService
     _httpService = serviceProvider.GetRequiredService<IBasicHttpService>();
     _config = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
   }
-
-
-  // Interface methods
+  
   public async Task UpdateEntryAsync(DnsUpdaterEntry entry, CancellationToken stoppingToken)
   {
     // TODO: [TESTS] (DnsUpdaterService.UpdateEntryAsync) Add tests
@@ -48,9 +46,7 @@ public class DnsUpdaterService : IDnsUpdaterService
     // Set the next update time
     entry.NextUpdate = _dateTime.Now.AddSeconds(entry.UpdateIntervalSec);
   }
-
-
-  // Internal methods
+  
   private void HandleMissingUpdater(DnsUpdaterEntry entry)
   {
     // TODO: [TESTS] (DnsUpdaterService.HandleMissingUpdater) Add tests

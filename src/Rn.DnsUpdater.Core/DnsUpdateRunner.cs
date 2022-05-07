@@ -25,7 +25,6 @@ public class DnsUpdateRunner : IDnsUpdateRunner
     _dnsUpdater = serviceProvider.GetRequiredService<IDnsUpdaterService>();
   }
 
-
   public async Task ExecuteAsync(CancellationToken stoppingToken)
   {
     // TODO: [DnsUpdateRunner.ExecuteAsync] (TESTS) Add tests
@@ -45,7 +44,6 @@ public class DnsUpdateRunner : IDnsUpdateRunner
       await Task.Delay(_configService.CoreConfig.TickInterval, stoppingToken);
     }
   }
-
 
   private async Task UpdateDnsEntries(IReadOnlyCollection<DnsUpdaterEntry> dnsEntries, CancellationToken stoppingToken)
   {
