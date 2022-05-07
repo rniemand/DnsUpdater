@@ -1,12 +1,16 @@
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
-using Rn.DnsUpdater.Core.Services.Interfaces;
 using Rn.NetCore.BasicHttp;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
 using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater.Core.Services;
+
+public interface IHostIpAddressService
+{
+  Task<bool> HostAddressChangedAsync(CancellationToken stoppingToken);
+}
 
 public class HostIpAddressService : IHostIpAddressService
 {

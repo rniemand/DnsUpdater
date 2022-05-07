@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
-using Rn.DnsUpdater.Core.Services.Interfaces;
+using Rn.DnsUpdater.Core.Services;
 using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater.Core;

@@ -2,7 +2,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Services;
-using Rn.DnsUpdater.Core.Services.Interfaces;
 using Rn.NetCore.BasicHttp;
 using Rn.NetCore.BasicHttp.Factories;
 using Rn.NetCore.Common.Abstractions;

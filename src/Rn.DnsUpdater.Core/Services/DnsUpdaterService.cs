@@ -1,12 +1,16 @@
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Enums;
-using Rn.DnsUpdater.Core.Services.Interfaces;
 using Rn.NetCore.BasicHttp;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater.Core.Services;
+
+public interface IDnsUpdaterService
+{
+  Task UpdateEntryAsync(DnsUpdaterEntry entry, CancellationToken stoppingToken);
+}
 
 public class DnsUpdaterService : IDnsUpdaterService
 {

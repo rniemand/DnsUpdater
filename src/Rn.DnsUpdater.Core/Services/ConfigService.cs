@@ -1,12 +1,21 @@
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Enums;
-using Rn.DnsUpdater.Core.Services.Interfaces;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Helpers;
 using Rn.NetCore.Common.Logging;
 
 namespace Rn.DnsUpdater.Core.Services;
+
+public interface IConfigService
+{
+  DnsUpdaterConfig CoreConfig { get; }
+  DnsEntriesConfig DnsEntriesConfig { get; }
+
+  List<DnsUpdaterEntry> GetEntriesNeedingUpdate();
+  List<DnsUpdaterEntry> GetEnabledEntries();
+  void SaveConfigState();
+}
 
 public class ConfigService : IConfigService
 {
