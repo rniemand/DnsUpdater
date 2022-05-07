@@ -1,5 +1,11 @@
 # DnsUpdater
-Generic DynamicDNS updating service written in `C#`.
+Smple Dynamic DNS updater service wrapped in a [Docker](https://hub.docker.com/) container.
+
+## Installation
+You can run the container stand-alone using the following command:
+
+    docker run -d niemandr/rndnsupdater
+
 
 Developer documentation can be found [here](/docs/README.md).
 
