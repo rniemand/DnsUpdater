@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace Rn.DnsUpdater.Services;
+﻿namespace Rn.DnsUpdater.Core.Services.Interfaces;
 
 public interface IHostIpAddressService
 {

@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Rn.NetCore.BasicHttp" Version="6.0.0.107" />
     <PackageReference Include="Rn.NetCore.Metrics" Version="6.0.0.104" />
   </ItemGroup>
 

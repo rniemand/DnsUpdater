@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Enums;
+using Rn.DnsUpdater.Core.Services.Interfaces;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Helpers;
 using Rn.NetCore.Common.Logging;
 
-namespace Rn.DnsUpdater.Services;
+namespace Rn.DnsUpdater.Core.Services;
 
 public class ConfigService : IConfigService
 {

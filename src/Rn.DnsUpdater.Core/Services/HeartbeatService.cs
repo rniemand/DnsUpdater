@@ -1,13 +1,12 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Enums;
+using Rn.DnsUpdater.Core.Services.Interfaces;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Metrics;
 using Rn.NetCore.Metrics.Builders;
 
-namespace Rn.DnsUpdater.Services;
+namespace Rn.DnsUpdater.Core.Services;
 
 public class HeartbeatService : IHeartbeatService
 {

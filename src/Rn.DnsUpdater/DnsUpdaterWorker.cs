@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Enums;
-using Rn.DnsUpdater.Services;
+using Rn.DnsUpdater.Core.Services.Interfaces;
 using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Metrics;
 using Rn.NetCore.Metrics.Builders;

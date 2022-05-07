@@ -1,11 +1,8 @@
-using System;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Enums;
 using Rn.DnsUpdater.Core.Metrics;
+using Rn.DnsUpdater.Core.Services.Interfaces;
 using Rn.NetCore.BasicHttp;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
@@ -13,7 +10,7 @@ using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Metrics;
 using Rn.NetCore.Metrics.Builders;
 
-namespace Rn.DnsUpdater.Services;
+namespace Rn.DnsUpdater.Core.Services;
 
 public class HostIpAddressService : IHostIpAddressService
 {
