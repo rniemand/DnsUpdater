@@ -16,7 +16,6 @@ public class DnsUpdateRunner : IDnsUpdateRunner
   private readonly IHostIpAddressService _addressService;
   private readonly IConfigService _configService;
   private readonly IDnsUpdaterService _dnsUpdater;
-  private readonly IHeartbeatService _heartbeatService;
 
   public DnsUpdateRunner(IServiceProvider serviceProvider)
   {
@@ -24,7 +23,6 @@ public class DnsUpdateRunner : IDnsUpdateRunner
     _addressService = serviceProvider.GetRequiredService<IHostIpAddressService>();
     _configService = serviceProvider.GetRequiredService<IConfigService>();
     _dnsUpdater = serviceProvider.GetRequiredService<IDnsUpdaterService>();
-    _heartbeatService = serviceProvider.GetRequiredService<IHeartbeatService>();
   }
 
 
@@ -33,7 +31,6 @@ public class DnsUpdateRunner : IDnsUpdateRunner
     // TODO: [DnsUpdateRunner.ExecuteAsync] (TESTS) Add tests
     while (!stoppingToken.IsCancellationRequested)
     {
-      await _heartbeatService.TickAsync();
       var hostAddressChanged = await _addressService.HostAddressChangedAsync(stoppingToken);
 
       // Decide if we need to update all entries, or just a smaller subset

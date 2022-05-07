@@ -44,8 +44,7 @@ public static class ServiceCollectionExtensions
       .AddSingleton<IHostIpAddressService, HostIpAddressService>()
       .AddSingleton<IBasicHttpService, BasicHttpService>()
       .AddSingleton<IDnsUpdaterService, DnsUpdaterService>()
-      .AddSingleton<IConfigService, ConfigService>()
-      .AddSingleton<IHeartbeatService, HeartbeatService>();
+      .AddSingleton<IConfigService, ConfigService>();
   }
 
   private static DnsUpdaterConfig GenerateConfig(IConfiguration configuration)
