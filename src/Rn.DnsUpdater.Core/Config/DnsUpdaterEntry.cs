@@ -23,19 +23,4 @@ public class DnsUpdaterEntry
 
   [JsonProperty("config")]
   public Dictionary<string, string> Config { get; set; } = new();
-
-  
-  // Helper methods
-  public string? GetConfig(string key, string? fallback = null) =>
-    // TODO: [TESTS] (DnsUpdaterEntry.GetConfig) Add tests
-    !Config.ContainsKey(key) ? fallback : Config[key];
-
-  public int GetIntConfig(string key, int fallback)
-  {
-    // TODO: [TESTS] (DnsUpdaterEntry.GetIntConfig) Add tests
-    if (!Config.ContainsKey(key))
-      return fallback;
-
-    return int.TryParse(Config[key], out var parsed) ? parsed : fallback;
-  }
 }

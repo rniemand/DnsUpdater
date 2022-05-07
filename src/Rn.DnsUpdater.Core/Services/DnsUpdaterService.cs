@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Enums;
+using Rn.DnsUpdater.Core.Extensions;
 using Rn.NetCore.BasicHttp;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Logging;
