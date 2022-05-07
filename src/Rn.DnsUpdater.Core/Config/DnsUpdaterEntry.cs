@@ -1,55 +1,26 @@
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using Rn.DnsUpdater.Core.Enums;
 
 namespace Rn.DnsUpdater.Core.Config;
 
+// DOCS: docs\configuration\DnsUpdaterEntry.md
 public class DnsUpdaterEntry
 {
-  [JsonProperty("enabled"), JsonPropertyName("enabled")]
+  [JsonProperty("enabled")]
   public bool Enabled { get; set; }
 
-  [JsonProperty("name"), JsonPropertyName("name")]
-  public string Name { get; set; }
+  [JsonProperty("name")]
+  public string Name { get; set; } = string.Empty;
 
-  [JsonProperty("nextUpdate"), JsonPropertyName("nextUpdate")]
+  [JsonProperty("nextUpdate")]
   public DateTime? NextUpdate { get; set; }
 
-  [JsonProperty("type"), JsonPropertyName("type")]
-  public DnsType Type { get; set; }
+  [JsonProperty("type")]
+  public DnsType Type { get; set; } = DnsType.Unspecified;
 
-  [JsonProperty("UpdateIntervalSec"), JsonPropertyName("UpdateIntervalSec")]
-  public int UpdateIntervalSec { get; set; }
+  [JsonProperty("updateIntervalSec")]
+  public int UpdateIntervalSec { get; set; } = 43200;
 
-  [JsonProperty("config"), JsonPropertyName("config")]
-  public Dictionary<string, string> Config { get; set; }
-
-
-  // Constructor
-  public DnsUpdaterEntry()
-  {
-    Enabled = false;
-    NextUpdate = null;
-    Name = string.Empty;
-    Type = DnsType.Unspecified;
-    UpdateIntervalSec = 60 * 60 * 12;
-    Config = new Dictionary<string, string>();
-  }
-
-
-  // Helper methods
-  public string GetConfig(string key, string fallback = null)
-  {
-    // TODO: [TESTS] (DnsUpdaterEntry.GetConfig) Add tests
-    return !Config.ContainsKey(key) ? fallback : Config[key];
-  }
-
-  public int GetIntConfig(string key, int fallback)
-  {
-    // TODO: [TESTS] (DnsUpdaterEntry.GetIntConfig) Add tests
-    if (!Config.ContainsKey(key))
-      return fallback;
-
-    return int.TryParse(Config[key], out var parsed) ? parsed : fallback;
-  }
+  [JsonProperty("config")]
+  public Dictionary<string, string> Config { get; set; } = new();
 }

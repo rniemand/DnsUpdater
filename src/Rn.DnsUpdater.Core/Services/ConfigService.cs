@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Enums;
@@ -8,12 +5,20 @@ using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Helpers;
 using Rn.NetCore.Common.Logging;
 
-namespace Rn.DnsUpdater.Services;
+namespace Rn.DnsUpdater.Core.Services;
+
+public interface IConfigService
+{
+  DnsUpdaterConfig CoreConfig { get; }
+
+  List<DnsUpdaterEntry> GetEntriesNeedingUpdate();
+  List<DnsUpdaterEntry> GetEnabledEntries();
+  void SaveConfigState();
+}
 
 public class ConfigService : IConfigService
 {
   public DnsUpdaterConfig CoreConfig { get; }
-  public DnsEntriesConfig DnsEntriesConfig { get; }
 
   private readonly ILoggerAdapter<ConfigService> _logger;
   private readonly IPathAbstraction _path;
@@ -22,6 +27,7 @@ public class ConfigService : IConfigService
   private readonly IJsonHelper _jsonHelper;
   private readonly IDateTimeAbstraction _dateTime;
   private readonly IEnvironmentAbstraction _environment;
+  private readonly DnsEntriesConfig _dnsEntriesConfig;
 
   public ConfigService(IServiceProvider serviceProvider)
   {
@@ -35,7 +41,7 @@ public class ConfigService : IConfigService
     _environment = serviceProvider.GetRequiredService<IEnvironmentAbstraction>();
     CoreConfig = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
 
-    DnsEntriesConfig = LoadConfiguration(CoreConfig);
+    _dnsEntriesConfig = LoadConfiguration(CoreConfig);
   }
 
 
@@ -45,7 +51,7 @@ public class ConfigService : IConfigService
     // TODO: [TESTS] (ConfigService.GetEntriesNeedingUpdate) Add tests
     var now = _dateTime.Now;
 
-    return DnsEntriesConfig.Entries
+    return _dnsEntriesConfig.Entries
       .Where(e => NeedsUpdating(e, now))
       .ToList();
   }
@@ -53,7 +59,7 @@ public class ConfigService : IConfigService
   public List<DnsUpdaterEntry> GetEnabledEntries()
   {
     // TODO: [TESTS] (ConfigService.GetEnabledEntries) Add tests
-    return DnsEntriesConfig.Entries.Where(e => e.Enabled).ToList();
+    return _dnsEntriesConfig.Entries.Where(e => e.Enabled).ToList();
   }
 
   public void SaveConfigState()
@@ -67,7 +73,7 @@ public class ConfigService : IConfigService
 
     try
     {
-      var configJson = _jsonHelper.SerializeObject(DnsEntriesConfig, true);
+      var configJson = _jsonHelper.SerializeObject(_dnsEntriesConfig, true);
       _file.WriteAllText(CoreConfig.ConfigFile, configJson);
       _logger.LogDebug("Updated configuration file");
     }
