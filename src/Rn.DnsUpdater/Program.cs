@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
-using Rn.DnsUpdater.Config;
+using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Services;
 using Rn.NetCore.BasicHttp;
 using Rn.NetCore.BasicHttp.Factories;

@@ -8,10 +8,12 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0-bullseye-slim AS build
 WORKDIR /src
 
 COPY ["/src/Rn.DnsUpdater/Rn.DnsUpdater.csproj", "Rn.DnsUpdater/"]
+COPY ["/src/Rn.DnsUpdater.Core/Rn.DnsUpdater.Core.csproj", "Rn.DnsUpdater.Core/"]
 
 RUN dotnet restore "Rn.DnsUpdater/Rn.DnsUpdater.csproj"
 
 COPY "/src/Rn.DnsUpdater/" "Rn.DnsUpdater/"
+COPY "/src/Rn.DnsUpdater.Core/" "Rn.DnsUpdater.Core/"
 
 WORKDIR "/src/Rn.DnsUpdater/"
 

@@ -1,4 +1,4 @@
-﻿namespace Rn.DnsUpdater.Metrics;
+﻿namespace Rn.DnsUpdater.Core.Metrics;
 
 public static class MetricPlaceholder
 {

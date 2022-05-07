@@ -1,10 +1,8 @@
-﻿using System;
-using System.Net.Http;
-using Rn.DnsUpdater.Config;
+using Rn.DnsUpdater.Core.Config;
 using Rn.NetCore.Metrics.Builders;
 using Rn.NetCore.Metrics.Models;
 
-namespace Rn.DnsUpdater.Metrics;
+namespace Rn.DnsUpdater.Core.Metrics.Interfaces;
 
 public interface IUpdateDnsEntryMetricBuilder : IMetricBuilder
 {

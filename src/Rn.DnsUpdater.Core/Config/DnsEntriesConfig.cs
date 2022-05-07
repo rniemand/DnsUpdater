@@ -1,8 +1,7 @@
-﻿using System;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
-namespace Rn.DnsUpdater.Config;
+namespace Rn.DnsUpdater.Core.Config;
 
 public class DnsEntriesConfig
 {

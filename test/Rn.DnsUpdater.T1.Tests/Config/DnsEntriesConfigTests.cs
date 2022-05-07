@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Rn.DnsUpdater.Config;
+using Rn.DnsUpdater.Core.Config;
 
 namespace Rn.DnsUpdater.T1.Tests.Config;
 

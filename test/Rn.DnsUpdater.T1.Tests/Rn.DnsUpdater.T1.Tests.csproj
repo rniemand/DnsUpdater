@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Rn.DnsUpdater.Core\Rn.DnsUpdater.Core.csproj" />
     <ProjectReference Include="..\..\src\Rn.DnsUpdater\Rn.DnsUpdater.csproj" />
   </ItemGroup>
 
