@@ -1,5 +1,6 @@
-﻿namespace Rn.DnsUpdater.Core.Enums;
+namespace Rn.DnsUpdater.Core.Enums;
 
+// DOCS: docs\enums\DnsType.md
 public enum DnsType
 {
   Unspecified = 0,
