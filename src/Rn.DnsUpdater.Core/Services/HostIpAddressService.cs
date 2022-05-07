@@ -1,14 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
-using Rn.DnsUpdater.Core.Enums;
-using Rn.DnsUpdater.Core.Metrics;
 using Rn.DnsUpdater.Core.Services.Interfaces;
 using Rn.NetCore.BasicHttp;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Metrics;
-using Rn.NetCore.Metrics.Builders;
 
 namespace Rn.DnsUpdater.Core.Services;
 
@@ -17,7 +13,6 @@ public class HostIpAddressService : IHostIpAddressService
   private readonly ILoggerAdapter<HostIpAddressService> _logger;
   private readonly IBasicHttpService _httpService;
   private readonly IDateTimeAbstraction _dateTime;
-  private readonly IMetricService _metrics;
   private readonly DnsUpdaterConfig _config;
 
   private string _lastHostAddress;
@@ -29,7 +24,6 @@ public class HostIpAddressService : IHostIpAddressService
     _logger = serviceProvider.GetRequiredService<ILoggerAdapter<HostIpAddressService>>();
     _httpService = serviceProvider.GetRequiredService<IBasicHttpService>();
     _config = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
-    _metrics = serviceProvider.GetRequiredService<IMetricService>();
     _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
 
     _lastHostAddress = string.Empty;
@@ -72,52 +66,23 @@ public class HostIpAddressService : IHostIpAddressService
     if (!HostAddressNeedsUpdating())
       return _lastHostAddress;
 
-    var builder = new ServiceMetricBuilder(nameof(HostIpAddressService), nameof(GetHostAddress))
-      .WithCategory(MetricCategory.HostIpAddress, MetricSubCategory.Tick)
-      .WithCustomTag1(_lastHostAddress.FallbackTo(MetricPlaceholder.Unknown)) // Old Address
-      .WithCustomTag2(MetricPlaceholder.Unknown) // New Address
-      .WithCustomTag3(MetricPlaceholder.Unknown) // Status code
-      .WithCustomTag4(false) // Changed
-      .WithCustomInt1(0);
+    //const string url = "https://api64.ipify.org/";
+    const string url = "https://api.ipify.org/";
+    var timeout = _config.DefaultHttpTimeoutMs;
 
-    try
+    _logger.LogInformation("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
+
+    var request = new HttpRequestMessage(HttpMethod.Get, url);
+    var response = await _httpService.SendAsync(request, timeout, stoppingToken);
+    var hostIpAddress = (await response.Content.ReadAsStringAsync(stoppingToken)).LowerTrim();
+    
+    if (!string.IsNullOrWhiteSpace(hostIpAddress))
     {
-      using (builder.WithTiming())
-      {
-        //const string url = "https://api64.ipify.org/";
-        const string url = "https://api.ipify.org/";
-        var timeout = _config.DefaultHttpTimeoutMs;
-
-        _logger.LogInformation("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
-        builder.WithCustomInt1(timeout);
-
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-        var response = await _httpService.SendAsync(request, timeout, stoppingToken);
-        var hostIpAddress = (await response.Content.ReadAsStringAsync(stoppingToken)).LowerTrim();
-
-        builder
-          .WithCustomTag2(hostIpAddress)
-          .WithCustomTag3(response.StatusCode.ToString("G"), true)
-          .WithCustomTag4(!_lastHostAddress.IgnoreCaseEquals(hostIpAddress));
-
-        if (!string.IsNullOrWhiteSpace(hostIpAddress))
-        {
-          _nextUpdate = _dateTime.Now.AddMinutes(_config.UpdateHostIpIntervalMin);
-          return hostIpAddress;
-        }
-
-        _logger.LogWarning("Got empty response, returning old IP Address to be safe");
-        return _lastHostAddress;
-      }
+      _nextUpdate = _dateTime.Now.AddMinutes(_config.UpdateHostIpIntervalMin);
+      return hostIpAddress;
     }
-    catch (Exception ex)
-    {
-      _logger.LogUnexpectedException(ex);
-      return _lastHostAddress;
-    }
-    finally
-    {
-      await _metrics.SubmitBuilderAsync(builder);
-    }
+
+    _logger.LogWarning("Got empty response, returning old IP Address to be safe");
+    return _lastHostAddress;
   }
 }

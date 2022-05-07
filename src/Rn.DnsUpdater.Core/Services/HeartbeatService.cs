@@ -1,17 +1,13 @@
 using Microsoft.Extensions.DependencyInjection;
-using Rn.DnsUpdater.Core.Enums;
 using Rn.DnsUpdater.Core.Services.Interfaces;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Metrics;
-using Rn.NetCore.Metrics.Builders;
 
 namespace Rn.DnsUpdater.Core.Services;
 
 public class HeartbeatService : IHeartbeatService
 {
   private readonly ILoggerAdapter<HeartbeatService> _logger;
-  private readonly IMetricService _metrics;
   private readonly IDateTimeAbstraction _dateTime;
 
   private DateTime? _nextTick;
@@ -21,7 +17,6 @@ public class HeartbeatService : IHeartbeatService
   {
     // TODO: [HeartbeatService.HeartbeatService] (TESTS) Add tests
     _logger = serviceProvider.GetRequiredService<ILoggerAdapter<HeartbeatService>>();
-    _metrics = serviceProvider.GetRequiredService<IMetricService>();
     _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
 
     _nextTick = null;
@@ -36,21 +31,8 @@ public class HeartbeatService : IHeartbeatService
     if (!CanRunHeartbeat())
       return;
 
-    try
-    {
-      var runningTime = (_dateTime.Now - _startTime);
-      _logger.LogDebug("Heartbeat - running for {time}", runningTime.ToString("g"));
-
-      await _metrics.SubmitBuilderAsync(new ServiceMetricBuilder(nameof(HeartbeatService), nameof(TickAsync))
-        .WithCategory(MetricCategory.Heartbeat, MetricSubCategory.Tick)
-        .WithCustomLong1((long)runningTime.TotalSeconds)
-      );
-    }
-    catch (Exception ex)
-    {
-      _logger.LogUnexpectedException(ex);
-    }
-
+    var runningTime = (_dateTime.Now - _startTime);
+    _logger.LogDebug("Heartbeat - running for {time}", runningTime.ToString("g"));
     _nextTick = _dateTime.Now.AddSeconds(60);
   }
 

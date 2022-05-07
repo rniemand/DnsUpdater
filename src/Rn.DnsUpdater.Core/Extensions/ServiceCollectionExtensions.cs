@@ -8,10 +8,6 @@ using Rn.NetCore.BasicHttp.Factories;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Helpers;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Metrics;
-using Rn.NetCore.Metrics.Outputs;
-using Rn.NetCore.Metrics.Rabbit;
-using Rn.NetCore.Metrics.Rabbit.Interfaces;
 
 namespace Rn.DnsUpdater.Core.Extensions;
 
@@ -40,14 +36,7 @@ public static class ServiceCollectionExtensions
 
       // Logging
       .AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>))
-
-      // Metrics
-      .AddSingleton<IMetricService, MetricService>()
-      .AddSingleton<IMetricServiceUtils, MetricServiceUtils>()
-      .AddSingleton<IMetricOutput, RabbitMetricOutput>()
-      .AddSingleton<IRabbitConnection, RabbitConnection>()
-      .AddSingleton<IRabbitFactory, RabbitFactory>()
-
+      
       // Misc
       .AddSingleton<IDnsUpdateRunner, DnsUpdateRunner>()
 

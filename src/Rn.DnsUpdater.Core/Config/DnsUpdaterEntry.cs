@@ -26,7 +26,7 @@ public class DnsUpdaterEntry
 
   
   // Helper methods
-  public string GetConfig(string key, string fallback = null) =>
+  public string? GetConfig(string key, string? fallback = null) =>
     // TODO: [TESTS] (DnsUpdaterEntry.GetConfig) Add tests
     !Config.ContainsKey(key) ? fallback : Config[key];
 

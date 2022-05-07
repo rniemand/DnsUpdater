@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,8 +12,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Rn.NetCore.BasicHttp" Version="6.0.0.107" />
     <PackageReference Include="Rn.NetCore.Common" Version="6.0.0.112" />
-    <PackageReference Include="Rn.NetCore.Metrics" Version="6.0.0.104" />
-    <PackageReference Include="Rn.NetCore.Metrics.Rabbit" Version="6.0.0.105" />
   </ItemGroup>
 
 </Project>

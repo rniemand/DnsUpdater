@@ -1,10 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
-using Rn.DnsUpdater.Core.Enums;
 using Rn.DnsUpdater.Core.Services.Interfaces;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Metrics;
-using Rn.NetCore.Metrics.Builders;
 
 namespace Rn.DnsUpdater.Core;
 
@@ -20,7 +17,6 @@ public class DnsUpdateRunner : IDnsUpdateRunner
   private readonly IConfigService _configService;
   private readonly IDnsUpdaterService _dnsUpdater;
   private readonly IHeartbeatService _heartbeatService;
-  private readonly IMetricService _metrics;
 
   public DnsUpdateRunner(IServiceProvider serviceProvider)
   {
@@ -29,7 +25,6 @@ public class DnsUpdateRunner : IDnsUpdateRunner
     _configService = serviceProvider.GetRequiredService<IConfigService>();
     _dnsUpdater = serviceProvider.GetRequiredService<IDnsUpdaterService>();
     _heartbeatService = serviceProvider.GetRequiredService<IHeartbeatService>();
-    _metrics = serviceProvider.GetRequiredService<IMetricService>();
   }
 
 
@@ -65,32 +60,12 @@ public class DnsUpdateRunner : IDnsUpdateRunner
     _logger.LogInformation(dnsEntries.Count == 1
       ? "Updating 1 DNS entry"
       : $"Updating {dnsEntries.Count} DNS entries");
-
-    var builder = new ServiceMetricBuilder(nameof(DnsUpdateRunner), nameof(UpdateDnsEntries))
-      .WithCategory(MetricCategory.DnsUpdater, MetricSubCategory.UpdateEntries)
-      .WithCustomInt1(dnsEntries.Count);
-
-    try
+    
+    foreach (var dnsEntry in dnsEntries)
     {
-      using (builder.WithTiming())
-      {
-        foreach (var dnsEntry in dnsEntries)
-        {
-          builder.IncrementQueryCount();
-          await _dnsUpdater.UpdateEntryAsync(dnsEntry, stoppingToken);
-        }
+      await _dnsUpdater.UpdateEntryAsync(dnsEntry, stoppingToken);
+    }
 
-        _configService.SaveConfigState();
-      }
-    }
-    catch (Exception ex)
-    {
-      builder.WithException(ex);
-      _logger.LogUnexpectedException(ex);
-    }
-    finally
-    {
-      await _metrics.SubmitBuilderAsync(builder);
-    }
+    _configService.SaveConfigState();
   }
 }
