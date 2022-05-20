@@ -1,5 +1,5 @@
 <#(Rn.BuildScriptHelper){
-  "version": "1.0.106"
+  "version": "1.0.107"
 }#>
 
 param (
