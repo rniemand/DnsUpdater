@@ -1,7 +1,8 @@
-using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Services;
 using Rn.NetCore.Common.Logging;
+using Rn.NetCore.Metrics;
+using Rn.NetCore.Metrics.Builders;
 
 namespace Rn.DnsUpdater.Core;
 
@@ -16,13 +17,20 @@ public class DnsUpdateRunner : IDnsUpdateRunner
   private readonly IHostIpAddressService _addressService;
   private readonly IConfigService _configService;
   private readonly IDnsUpdaterService _dnsUpdater;
+  private readonly IMetricService _metrics;
 
-  public DnsUpdateRunner(IServiceProvider serviceProvider)
+  public DnsUpdateRunner(
+    ILoggerAdapter<DnsUpdateRunner> logger,
+    IHostIpAddressService addressService,
+    IConfigService configService,
+    IDnsUpdaterService dnsUpdater,
+    IMetricService metrics)
   {
-    _logger = serviceProvider.GetRequiredService<ILoggerAdapter<DnsUpdateRunner>>();
-    _addressService = serviceProvider.GetRequiredService<IHostIpAddressService>();
-    _configService = serviceProvider.GetRequiredService<IConfigService>();
-    _dnsUpdater = serviceProvider.GetRequiredService<IDnsUpdaterService>();
+    _logger = logger;
+    _addressService = addressService;
+    _configService = configService;
+    _dnsUpdater = dnsUpdater;
+    _metrics = metrics;
   }
 
   public async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -40,6 +48,7 @@ public class DnsUpdateRunner : IDnsUpdateRunner
       await UpdateDnsEntries(dnsEntries, stoppingToken);
 
       // Wait for the next loop
+      await _metrics.SubmitBuilderAsync(CreateMetricBuilder("Heartbeat"));
       await Task.Delay(_configService.CoreConfig.TickInterval, stoppingToken);
     }
   }
@@ -49,16 +58,35 @@ public class DnsUpdateRunner : IDnsUpdateRunner
     // Ensure that we have something to work with
     if (dnsEntries.Count == 0)
       return;
-
-    _logger.LogInformation(dnsEntries.Count == 1
-      ? "Updating 1 DNS entry"
-      : $"Updating {dnsEntries.Count} DNS entries");
     
-    foreach (var dnsEntry in dnsEntries)
-    {
-      await _dnsUpdater.UpdateEntryAsync(dnsEntry, stoppingToken);
-    }
+    var builder = CreateMetricBuilder(nameof(UpdateDnsEntries));
 
-    _configService.SaveConfigState();
+    try
+    {
+      _logger.LogInformation(dnsEntries.Count == 1
+        ? "Updating 1 DNS entry"
+        : $"Updating {dnsEntries.Count} DNS entries");
+
+      builder.WithCustomInt1(dnsEntries.Count);
+      using (builder.WithTiming())
+      {
+        foreach (var dnsEntry in dnsEntries)
+        {
+          await _dnsUpdater.UpdateEntryAsync(dnsEntry, stoppingToken);
+        }
+      }
+
+      _configService.SaveConfigState();
+    }
+    catch (Exception ex)
+    {
+      builder.WithException(ex);
+    }
+    finally
+    {
+      await _metrics.SubmitBuilderAsync(builder);
+    }
   }
+  
+  private static ServiceMetricBuilder CreateMetricBuilder(string method) => new(nameof(DnsUpdateRunner), method);
 }
