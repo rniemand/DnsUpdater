@@ -22,7 +22,6 @@ public class DnsUpdaterService : IDnsUpdaterService
 
   public DnsUpdaterService(IServiceProvider serviceProvider)
   {
-    // TODO: [DnsUpdaterService] (TESTS) Add tests
     _logger = serviceProvider.GetRequiredService<ILoggerAdapter<DnsUpdaterService>>();
     _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
     _httpService = serviceProvider.GetRequiredService<IBasicHttpService>();
@@ -31,7 +30,6 @@ public class DnsUpdaterService : IDnsUpdaterService
   
   public async Task UpdateEntryAsync(DnsUpdaterEntry entry, CancellationToken stoppingToken)
   {
-    // TODO: [TESTS] (DnsUpdaterService.UpdateEntryAsync) Add tests
     // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
     switch (entry.Type)
     {
@@ -50,7 +48,6 @@ public class DnsUpdaterService : IDnsUpdaterService
   
   private void HandleMissingUpdater(DnsUpdaterEntry entry)
   {
-    // TODO: [TESTS] (DnsUpdaterService.HandleMissingUpdater) Add tests
     _logger.LogError("No updater found for DnsEntry type '{type}'",
       entry.Type.ToString("G")
     );
@@ -58,7 +55,6 @@ public class DnsUpdaterService : IDnsUpdaterService
 
   private async Task UpdateFreeDnsEntry(DnsUpdaterEntry entry, CancellationToken stoppingToken)
   {
-    // TODO: [TESTS] (DnsUpdaterService.UpdateFreeDnsEntry) Add tests
     var updateUrl = entry.GetConfig(ConfigKeys.Url);
     var timeoutMs = entry.GetIntConfig(ConfigKeys.TimeoutMs, _config.DefaultHttpTimeoutMs);
     var request = new HttpRequestMessage(HttpMethod.Get, updateUrl);

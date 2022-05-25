@@ -27,7 +27,6 @@ public class DnsUpdateRunner : IDnsUpdateRunner
 
   public async Task ExecuteAsync(CancellationToken stoppingToken)
   {
-    // TODO: [DnsUpdateRunner.ExecuteAsync] (TESTS) Add tests
     while (!stoppingToken.IsCancellationRequested)
     {
       var hostAddressChanged = await _addressService.HostAddressChangedAsync(stoppingToken);
@@ -47,7 +46,6 @@ public class DnsUpdateRunner : IDnsUpdateRunner
 
   private async Task UpdateDnsEntries(IReadOnlyCollection<DnsUpdaterEntry> dnsEntries, CancellationToken stoppingToken)
   {
-    // TODO: [TESTS] (DnsUpdaterWorker.UpdateDnsEntries) Add tests
     // Ensure that we have something to work with
     if (dnsEntries.Count == 0)
       return;

@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>annotations</Nullable>
+    <ProjectGuid>33C639E9-C34E-4DA0-A6F6-DC7B1431484E</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>

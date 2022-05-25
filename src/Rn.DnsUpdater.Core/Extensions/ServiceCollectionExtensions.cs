@@ -14,7 +14,6 @@ public static class ServiceCollectionExtensions
 {
   public static IServiceCollection AddRnDnsUpdater(this IServiceCollection services, IConfiguration configuration)
   {
-    // TODO: [ServiceCollectionExtensions.AddRnDnsUpdater] (TESTS) Add tests
     return services
       // Abstractions
       .AddSingleton<IFileAbstraction, FileAbstraction>()
@@ -48,7 +47,6 @@ public static class ServiceCollectionExtensions
 
   private static DnsUpdaterConfig GenerateConfig(IConfiguration configuration)
   {
-    // TODO: [ServiceCollectionExtensions.GenerateConfig] (TESTS) Add tests
     var boundConfig = new DnsUpdaterConfig();
     var section = configuration.GetSection("DnsUpdater");
 

@@ -31,7 +31,6 @@ public class ConfigService : IConfigService
 
   public ConfigService(IServiceProvider serviceProvider)
   {
-    // TODO: [TESTS] (ConfigService) Add tests
     _logger = serviceProvider.GetRequiredService<ILoggerAdapter<ConfigService>>();
     _path = serviceProvider.GetRequiredService<IPathAbstraction>();
     _directory = serviceProvider.GetRequiredService<IDirectoryAbstraction>();
@@ -48,7 +47,6 @@ public class ConfigService : IConfigService
   // Interface methods
   public List<DnsUpdaterEntry> GetEntriesNeedingUpdate()
   {
-    // TODO: [TESTS] (ConfigService.GetEntriesNeedingUpdate) Add tests
     var now = _dateTime.Now;
 
     return _dnsEntriesConfig.Entries
@@ -58,13 +56,11 @@ public class ConfigService : IConfigService
 
   public List<DnsUpdaterEntry> GetEnabledEntries()
   {
-    // TODO: [TESTS] (ConfigService.GetEnabledEntries) Add tests
     return _dnsEntriesConfig.Entries.Where(e => e.Enabled).ToList();
   }
 
   public void SaveConfigState()
   {
-    // TODO: [TESTS] (ConfigService.SaveConfigState) Add tests
     if (!ShiftConfigFiles())
     {
       _logger.LogError("Unable to manage configuration files, quitting!");
@@ -88,7 +84,6 @@ public class ConfigService : IConfigService
   // Internal methods
   private bool ShiftConfigFiles()
   {
-    // TODO: [TESTS] (ConfigService.ShiftConfigFiles) Add tests
     try
     {
       var previousConfig = $"{CoreConfig.ConfigFile}.previous";
@@ -110,7 +105,6 @@ public class ConfigService : IConfigService
 
   private static bool NeedsUpdating(DnsUpdaterEntry entry, DateTime now)
   {
-    // TODO: [TESTS] (ConfigService.NeedsUpdating) Add tests
     if (!entry.Enabled)
       return false;
 
@@ -122,7 +116,6 @@ public class ConfigService : IConfigService
 
   private DnsEntriesConfig LoadConfiguration(DnsUpdaterConfig config)
   {
-    // TODO: [TESTS] (ConfigService.LoadConfiguration) Add tests
     var configDir = _path.GetDirectoryName(config.ConfigFile);
 
     // Ensure that the configuration directory exists
@@ -147,7 +140,6 @@ public class ConfigService : IConfigService
 
   private static DnsEntriesConfig GenerateSampleConfig()
   {
-    // TODO: [TESTS] (ConfigService.GenerateSampleConfig) Add tests
     return new DnsEntriesConfig
     {
       Entries = new[]

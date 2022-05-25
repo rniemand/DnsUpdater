@@ -24,7 +24,6 @@ public class HostIpAddressService : IHostIpAddressService
 
   public HostIpAddressService(IServiceProvider serviceProvider)
   {
-    // TODO: [HostIpAddressService] (TESTS) Add tests
     _logger = serviceProvider.GetRequiredService<ILoggerAdapter<HostIpAddressService>>();
     _httpService = serviceProvider.GetRequiredService<IBasicHttpService>();
     _config = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
@@ -36,7 +35,6 @@ public class HostIpAddressService : IHostIpAddressService
   
   public async Task<bool> HostAddressChangedAsync(CancellationToken stoppingToken)
   {
-    // TODO: [TESTS] (HostIpAddressService.HostAddressChangedAsync) Add tests
     var hostAddress = await GetHostAddress(stoppingToken);
 
     if (_lastHostAddress.IgnoreCaseEquals(hostAddress))
@@ -53,7 +51,6 @@ public class HostIpAddressService : IHostIpAddressService
   
   private bool HostAddressNeedsUpdating()
   {
-    // TODO: [TESTS] (HostIpAddressService.HostAddressNeedsUpdating) Add tests
     if (!_nextUpdate.HasValue)
       return true;
 
@@ -62,7 +59,6 @@ public class HostIpAddressService : IHostIpAddressService
 
   private async Task<string> GetHostAddress(CancellationToken stoppingToken)
   {
-    // TODO: [TESTS] (HostIpAddressService.GetHostAddress) Add tests
     if (!HostAddressNeedsUpdating())
       return _lastHostAddress;
 
