@@ -11,7 +11,7 @@ namespace Rn.DnsUpdater;
 
 public class Program
 {
-  public static void Main(string[] args)
+  protected static void Main(string[] args)
   {
     var logger = LogManager.GetCurrentClassLogger();
 

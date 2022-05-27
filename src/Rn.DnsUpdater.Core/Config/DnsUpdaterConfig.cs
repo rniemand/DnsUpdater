@@ -16,4 +16,7 @@ public class DnsUpdaterConfig
 
   [ConfigurationKeyName("defaultHttpTimeoutMs")]
   public int DefaultHttpTimeoutMs { get; set; } = 5000;
+
+  [ConfigurationKeyName("providerUrls")]
+  public Dictionary<string, string> ProviderUrls { get; set; } = new();
 }
