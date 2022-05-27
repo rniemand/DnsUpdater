@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
+using Rn.DnsUpdater.Core.Exceptions;
 using Rn.NetCore.BasicHttp;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Extensions;
@@ -18,6 +19,8 @@ public class HostIpAddressService : IHostIpAddressService
   private readonly IBasicHttpService _httpService;
   private readonly IDateTimeAbstraction _dateTime;
   private readonly DnsUpdaterConfig _config;
+  private readonly string _providerUrl;
+  private readonly int _httpTimeoutMs;
 
   private string _lastHostAddress;
   private DateTime? _nextUpdate;
@@ -28,6 +31,9 @@ public class HostIpAddressService : IHostIpAddressService
     _httpService = serviceProvider.GetRequiredService<IBasicHttpService>();
     _config = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
     _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
+
+    _providerUrl = GetProviderUrl("ipify");
+    _httpTimeoutMs = _config.DefaultHttpTimeoutMs;
 
     _lastHostAddress = string.Empty;
     _nextUpdate = null;
@@ -57,19 +63,30 @@ public class HostIpAddressService : IHostIpAddressService
     return !(_nextUpdate > _dateTime.Now);
   }
 
+  private string GetProviderUrl(string provider)
+  {
+    if (_config.ProviderUrls.Count == 0)
+      throw new MissingProviderUrlException(provider);
+
+    if(!_config.ProviderUrls.Any(x => x.Key.IgnoreCaseEquals(provider)))
+      throw new MissingProviderUrlException(provider);
+
+    return _config.ProviderUrls
+      .First(x => x.Key.IgnoreCaseEquals(provider))
+      .Value;
+  }
+
   private async Task<string> GetHostAddress(CancellationToken stoppingToken)
   {
     if (!HostAddressNeedsUpdating())
       return _lastHostAddress;
 
-    //const string url = "https://api64.ipify.org/";
-    const string url = "https://api.ipify.org/";
-    var timeout = _config.DefaultHttpTimeoutMs;
+    _logger.LogInformation("Refreshing hosts IP Address ({url}) timeout = {timeout} ms",
+      _providerUrl,
+      _httpTimeoutMs);
 
-    _logger.LogInformation("Refreshing hosts IP Address ({url}) timeout = {timeout} ms", url, timeout);
-
-    var request = new HttpRequestMessage(HttpMethod.Get, url);
-    var response = await _httpService.SendAsync(request, timeout, stoppingToken);
+    var request = new HttpRequestMessage(HttpMethod.Get, _providerUrl);
+    var response = await _httpService.SendAsync(request, _httpTimeoutMs, stoppingToken);
     var hostIpAddress = (await response.Content.ReadAsStringAsync(stoppingToken)).LowerTrim();
     
     if (!string.IsNullOrWhiteSpace(hostIpAddress))
