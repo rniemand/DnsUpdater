@@ -11,9 +11,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="5.0.0" />
-    <PackageReference Include="Rn.NetCore.Common" Version="6.0.1.102" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.16.1" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.0.1" />
+    <PackageReference Include="Rn.NetCore.Common" Version="6.1.0.100" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rn.DnsUpdater.Core\Rn.DnsUpdater.Core.csproj" />

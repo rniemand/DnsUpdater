@@ -3,6 +3,7 @@ using Rn.DnsUpdater.Core.Services;
 using Rn.NetCore.Common.Logging;
 using Rn.NetCore.Metrics;
 using Rn.NetCore.Metrics.Builders;
+using Rn.NetCore.Metrics.Extensions;
 
 namespace Rn.DnsUpdater.Core;
 
@@ -48,7 +49,7 @@ public class DnsUpdateRunner : IDnsUpdateRunner
       await UpdateDnsEntries(dnsEntries, stoppingToken);
 
       // Wait for the next loop
-      await _metrics.SubmitBuilderAsync(CreateMetricBuilder("Heartbeat"));
+      await _metrics.SubmitAsync(CreateMetricBuilder("Heartbeat"));
       await Task.Delay(_configService.CoreConfig.TickInterval, stoppingToken);
     }
   }
@@ -84,7 +85,7 @@ public class DnsUpdateRunner : IDnsUpdateRunner
     }
     finally
     {
-      await _metrics.SubmitBuilderAsync(builder);
+      await _metrics.SubmitAsync(builder);
     }
   }
   

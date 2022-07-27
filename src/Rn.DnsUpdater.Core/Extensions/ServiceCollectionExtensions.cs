@@ -3,14 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Services;
 using Rn.NetCore.BasicHttp;
-using Rn.NetCore.BasicHttp.Factories;
 using Rn.NetCore.Common.Abstractions;
 using Rn.NetCore.Common.Helpers;
 using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Metrics;
-using Rn.NetCore.Metrics.Outputs;
-using Rn.NetCore.Metrics.Rabbit;
-using Rn.NetCore.Metrics.Rabbit.Interfaces;
+using Rn.NetCore.Metrics.Extensions;
+using Rn.NetCore.Metrics.Rabbit.Extensions;
 
 namespace Rn.DnsUpdater.Core.Extensions;
 
@@ -43,11 +40,8 @@ public static class ServiceCollectionExtensions
       .AddSingleton<IDnsUpdateRunner, DnsUpdateRunner>()
 
       // Metrics
-      .AddSingleton<IMetricServiceUtils, MetricServiceUtils>()
-      .AddSingleton<IMetricService, MetricService>()
-      .AddSingleton<IRabbitFactory, RabbitFactory>()
-      .AddSingleton<IRabbitConnection, RabbitConnection>()
-      .AddSingleton<IMetricOutput, RabbitMetricOutput>()
+      .AddRnMetricsBase(configuration)
+      .AddRnMetricRabbitMQ()
 
       // Services
       .AddSingleton<IHostIpAddressService, HostIpAddressService>()
