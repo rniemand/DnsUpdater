@@ -1,0 +1,33 @@
+version: '3.6'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: always
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: 'saP@ssw0rd'
+      MSSQL_PID: 'Developer'
+    volumes:
+      - C:/docker/SonarQube/mssql/data:/var/opt/mssql/data
+      - C:/docker/SonarQube/mssql/log:/var/opt/mssql/log
+      - C:/docker/SonarQube/mssql/secrets:/var/opt/mssql/secrets
+    ports:
+      - 1433:1433
+
+  sonarqube:
+    image: sonarqube
+    restart: always
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: 'true'
+      SONAR_JDBC_URL: jdbc:sqlserver://db;databaseName=SonarQube
+      SONAR_JDBC_USERNAME: sa
+      SONAR_JDBC_PASSWORD: 'saP@ssw0rd'
+    volumes:
+      - C:/docker/SonarQube/sonarqube/data:/opt/sonarqube/data
+      - C:/docker/SonarQube/sonarqube/logs:/opt/sonarqube/logs
+      - C:/docker/SonarQube/sonarqube/extensions:/opt/sonarqube/extensions
+    ports:
+      - 9000:9000
+    depends_on:
+      - "db"

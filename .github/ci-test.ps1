@@ -1,12 +1,9 @@
-<#(Rn.BuildScriptHelper){
-	"version": "1.0.106"
-}#>
 param (
   [Parameter(Mandatory=$false)]
   [string] $rootDir = $PSScriptRoot,
 
   [Parameter(Mandatory=$false)]
-  [string] $testCsprojPattern = "*T1.Tests.csproj",
+  [string] $testCsprojPattern = "*.Tests.csproj",
 
   [Parameter(Mandatory=$false)]
   [string] $configuration = "Release",
@@ -16,12 +13,13 @@ param (
 )
 
 $rootDir               = [IO.Path]::GetFullPath((Join-Path $rootDir "\..\"));
-$sourceDir             = Join-Path $rootDir "test\";
+$sourceDir             = Join-Path $rootDir "tests\";
 $publishDir            = Join-Path $rootDir "artifacts\";
 $toolsDir              = Join-Path $rootDir "tools\";
-$testPublishDir        = Join-Path $publishDir "t1-publish\";
-$testResultsDir        = Join-Path $publishDir "t1-results\";
-$testCoverageDir       = Join-Path $publishDir "t1-coverage\";
+$testPublishDir        = Join-Path $publishDir "test-publish\";
+$testResultsDir        = Join-Path $publishDir "test-results\";
+$testCoverageDir       = Join-Path $publishDir "test-coverage\";
+$reportgenOutDir       = Join-Path $testCoverageDir "reports\";
 $coverletExe           = Join-Path $toolsDir "coverlet.exe";
 $reportGeneratorExe    = Join-Path $toolsDir "reportgenerator.exe"
 
@@ -51,7 +49,7 @@ $cleanupDirectories = @();
 $cleanupDirectories += $testPublishDir;
 $cleanupDirectories += $testCoverageDir;
 $cleanupDirectories += $testResultsDir;
- 
+
 foreach ($cleanupDirectory in $cleanupDirectories) {
   if (Test-Path $cleanupDirectory) {
     Remove-item $cleanupDirectory -Recurse -Force | Out-Null;
@@ -80,7 +78,7 @@ if(!(Test-Path $reportGeneratorExe)) {
 # Discover and Build test projects
 # ==============================================================
 #
-$testProjects = Get-ChildItem -Path $sourceDir -Include $testCsprojPattern -Recurse -File
+$testProjects = Get-ChildItem -Path $sourceDir -Include $testCsprojPattern -Recurse -File;
 
 if ($testProjects.count -eq 0) {
   throw "No files matched the $testCsprojPattern pattern. The script cannot continue."
@@ -113,14 +111,14 @@ foreach ($testProject in $testProjects) {
   # Generate coverage report
   $testResultFileName   = Join-Path $testResultsDir "$( $testProject.BaseName )_results.trx";
   $coverageOutputDir    = Join-Path $testCoverageDir ($testProject.BaseName + "\");
-  
+
   # https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test
   $dotnetTestTargetArgs = @(
     "test",
     "$( $testProject.FullName )",
     "--logger:trx;LogFileName=$testResultFileName",
     "--configuration $configuration",
-    "--no-build", 
+    "--no-build",
     "--no-restore"
   );
 
@@ -138,3 +136,19 @@ foreach ($testProject in $testProjects) {
   Write-Output ("Running coverage :: $coverletCmd");
   Invoke-Expression -Command $coverletCmd;
 }
+
+# ==============================================================
+# Generate coverage reports
+# ==============================================================
+#
+$coberturaFiles = ((Get-ChildItem -Path $testCoverageDir -Include "*.cobertura.xml" -Recurse -File).FullName) -Join ";";
+
+$reportgenArgs = @(
+  "-reports:$coberturaFiles",
+  "-targetdir:$reportgenOutDir",
+  "-reporttypes:Html"
+);
+
+$reportgenCommand = "$reportGeneratorExe $reportgenArgs";
+Write-Output ("Running reportgenerator :: $reportgenCommand");
+Invoke-Expression -Command $reportgenCommand;
