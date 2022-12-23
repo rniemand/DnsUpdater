@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rn.DnsUpdater.Core", "Rn.Dn
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{857D2233-8438-40E2-B2D4-665C3602882D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rn.DnsUpdater.T1.Tests", "..\tests\Rn.DnsUpdater.T1.Tests\Rn.DnsUpdater.T1.Tests.csproj", "{93F089DD-1B0E-4252-9118-0FE5AD947208}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{50444BA4-321F-46EC-B869-BBEF056A4060}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rn.DnsUpdater.Tests", "..\tests\Rn.DnsUpdater.Tests\Rn.DnsUpdater.Tests.csproj", "{93F089DD-1B0E-4252-9118-0FE5AD947208}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,7 +37,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{33C639E9-C34E-4DA0-A6F6-DC7B1431484E} = {857D2233-8438-40E2-B2D4-665C3602882D}
-		{93F089DD-1B0E-4252-9118-0FE5AD947208} = {857D2233-8438-40E2-B2D4-665C3602882D}
+		{93F089DD-1B0E-4252-9118-0FE5AD947208} = {50444BA4-321F-46EC-B869-BBEF056A4060}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93178CE5-92ED-4EC1-B21D-BBF1B33EFEFA}

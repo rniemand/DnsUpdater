@@ -1,7 +1,3 @@
-<#(Rn.BuildScriptHelper){
-  "version": "1.0.107"
-}#>
-
 param (
   [Parameter(Mandatory=$true)]
   [string] $project,

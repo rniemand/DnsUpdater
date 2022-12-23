@@ -3,7 +3,7 @@ param (
   [string] $rootDir = $PSScriptRoot,
 
   [Parameter(Mandatory=$false)]
-  [string] $testCsprojPattern = "*.Tests.csproj",
+  [string] $testCsprojPattern = "*Tests.csproj",
 
   [Parameter(Mandatory=$false)]
   [string] $configuration = "Release",
