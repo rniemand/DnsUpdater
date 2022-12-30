@@ -1,5 +1,3 @@
-[Home](/README.md) / [Docs](/docs/README.md) / [Configuration](/docs/configuration/README.md) / appsettings.json
-
 # appsettings.json
 More to come...
 

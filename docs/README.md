@@ -1,11 +1,9 @@
-[Home](/README.md) / Docs
+# DnsUpdater
+Smple Dynamic DNS updater service wrapped in a [Docker](https://hub.docker.com/) container.
 
-# Documentation
-Starter documentation for `DnsUpdater`.
+## Installation
+You can run the container stand-alone using the following command:
 
-More to come...
-
-<!--(Rn.BuildScriptHelper){
-	"version": "1.0.107",
-	"replace": true
-}(END)-->
+```bash
+docker run -d niemandr/rndnsupdater
+```

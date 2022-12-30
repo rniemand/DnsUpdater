@@ -1,5 +1,3 @@
-[Home](/README.md) / [Docs](/docs/README.md) / [Enums](/docs/enums/README.md) / DnsType
-
 # DnsType
 Supported DNS entry types for **DnsUpdater**.
 

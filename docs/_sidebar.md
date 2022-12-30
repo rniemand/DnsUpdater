@@ -1,0 +1,6 @@
+- **Configuration**
+- [appsettings](./configuration/appsettings.md)
+- [DnsEntriesConfig](./configuration/DnsEntriesConfig.md)
+- [DnsUpdaterEntry](./configuration/DnsUpdaterEntry.md)
+- **Enums**
+- [DnsType](./enums/DnsType.md)
