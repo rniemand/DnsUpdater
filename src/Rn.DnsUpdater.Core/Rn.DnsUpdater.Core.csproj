@@ -11,10 +11,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="Rn.NetCore.BasicHttp" Version="6.0.1.102" />
-    <PackageReference Include="Rn.NetCore.Common" Version="6.1.0.100" />
-    <PackageReference Include="Rn.NetCore.Metrics" Version="6.1.0.102" />
-    <PackageReference Include="Rn.NetCore.Metrics.Rabbit" Version="6.0.2.101" />
+    <PackageReference Include="Rn.NetCore.BasicHttp" Version="6.0.1.103" />
+    <PackageReference Include="Rn.NetCore.Common" Version="6.1.0.101" />
+    <PackageReference Include="Rn.NetCore.Metrics" Version="6.1.0.103" />
+    <PackageReference Include="Rn.NetCore.Metrics.Rabbit" Version="6.0.2.103" />
   </ItemGroup>
 
 </Project>
