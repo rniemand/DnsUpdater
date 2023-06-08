@@ -2,9 +2,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Enums;
 using Rn.DnsUpdater.Core.Extensions;
-using Rn.NetCore.BasicHttp;
-using Rn.NetCore.Common.Abstractions;
-using Rn.NetCore.Common.Logging;
+using RnCore.Abstractions;
+using RnCore.Logging;
 
 namespace Rn.DnsUpdater.Core.Services;
 
@@ -17,14 +16,14 @@ public class DnsUpdaterService : IDnsUpdaterService
 {
   private readonly ILoggerAdapter<DnsUpdaterService> _logger;
   private readonly IDateTimeAbstraction _dateTime;
-  private readonly IBasicHttpService _httpService;
+  private readonly HttpClient _httpClient;
   private readonly DnsUpdaterConfig _config;
 
   public DnsUpdaterService(IServiceProvider serviceProvider)
   {
     _logger = serviceProvider.GetRequiredService<ILoggerAdapter<DnsUpdaterService>>();
     _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
-    _httpService = serviceProvider.GetRequiredService<IBasicHttpService>();
+    _httpClient = new HttpClient();
     _config = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
   }
   
@@ -58,7 +57,7 @@ public class DnsUpdaterService : IDnsUpdaterService
     var updateUrl = entry.GetConfig(ConfigKeys.Url);
     var timeoutMs = entry.GetIntConfig(ConfigKeys.TimeoutMs, _config.DefaultHttpTimeoutMs);
     var request = new HttpRequestMessage(HttpMethod.Get, updateUrl);
-    var response = await _httpService.SendAsync(request, timeoutMs, stoppingToken);
+    var response = await _httpClient.SendAsync(request, stoppingToken);
     var responseBody = await response.Content.ReadAsStringAsync(stoppingToken);
 
     _logger.LogInformation("Update response for {entryName}: ({code}) {body}",

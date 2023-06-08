@@ -1,9 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Enums;
-using Rn.NetCore.Common.Abstractions;
-using Rn.NetCore.Common.Helpers;
-using Rn.NetCore.Common.Logging;
+using RnCore.Abstractions;
+using RnCore.Logging;
 
 namespace Rn.DnsUpdater.Core.Services;
 
@@ -64,7 +63,8 @@ public class ConfigService : IConfigService
     if (!ShiftConfigFiles())
     {
       _logger.LogError("Unable to manage configuration files, quitting!");
-      _environment.Exit(10);
+      // TODO: [COMPLETE] (ConfigService.SaveConfigState) complete this
+      Environment.Exit(10);
     }
 
     try
@@ -75,8 +75,12 @@ public class ConfigService : IConfigService
     }
     catch (Exception ex)
     {
-      _logger.LogUnexpectedException(ex);
-      _environment.Exit(11);
+      // TODO: [LOGGING] (ConfigService.SaveConfigState) Replace method call
+      //_logger.LogUnexpectedException(ex);
+      _logger.LogError(ex, ex.Message);
+      // TODO: [COMPLETE] (ConfigService.SaveConfigState) complete this
+      //_environment.Exit(11);
+      Environment.Exit(11);
     }
   }
 
@@ -98,7 +102,9 @@ public class ConfigService : IConfigService
     }
     catch (Exception ex)
     {
-      _logger.LogUnexpectedException(ex);
+      // TODO: [LOGGING] (ConfigService.ShiftConfigFiles) Replace this call
+      //_logger.LogUnexpectedException(ex);
+      _logger.LogError(ex, ex.Message);
       return false;
     }
   }

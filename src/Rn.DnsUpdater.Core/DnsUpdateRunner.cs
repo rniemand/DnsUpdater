@@ -1,9 +1,9 @@
+using System.Diagnostics;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Services;
-using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Metrics;
-using Rn.NetCore.Metrics.Builders;
-using Rn.NetCore.Metrics.Extensions;
+using RnCore.Logging;
+using RnCore.Metrics;
+using RnCore.Metrics.Extensions;
 
 namespace Rn.DnsUpdater.Core;
 
@@ -18,14 +18,14 @@ public class DnsUpdateRunner : IDnsUpdateRunner
   private readonly IHostIpAddressService _addressService;
   private readonly IConfigService _configService;
   private readonly IDnsUpdaterService _dnsUpdater;
-  private readonly IMetricService _metrics;
+  private readonly IMetricsService _metrics;
 
   public DnsUpdateRunner(
     ILoggerAdapter<DnsUpdateRunner> logger,
     IHostIpAddressService addressService,
     IConfigService configService,
     IDnsUpdaterService dnsUpdater,
-    IMetricService metrics)
+    IMetricsService metrics)
   {
     _logger = logger;
     _addressService = addressService;
@@ -38,18 +38,24 @@ public class DnsUpdateRunner : IDnsUpdateRunner
   {
     while (!stoppingToken.IsCancellationRequested)
     {
-      var hostAddressChanged = await _addressService.HostAddressChangedAsync(stoppingToken);
+      var heartbeat = new ServiceMetricBuilder("Heartbeat");
 
-      // Decide if we need to update all entries, or just a smaller subset
-      var dnsEntries = hostAddressChanged
-        ? _configService.GetEnabledEntries()
-        : _configService.GetEntriesNeedingUpdate();
+      // We need something for the heartbeat to measure
+      using (heartbeat.WithTiming())
+      {
+        var hostAddressChanged = await _addressService.HostAddressChangedAsync(stoppingToken);
 
-      // Update any DnsEntries returned above
-      await UpdateDnsEntries(dnsEntries, stoppingToken);
+        // Decide if we need to update all entries, or just a smaller subset
+        var dnsEntries = hostAddressChanged
+          ? _configService.GetEnabledEntries()
+          : _configService.GetEntriesNeedingUpdate();
+
+        // Update any DnsEntries returned above
+        await UpdateDnsEntries(dnsEntries, stoppingToken);
+      }
 
       // Wait for the next loop
-      await _metrics.SubmitAsync(CreateMetricBuilder("Heartbeat"));
+      await _metrics.SubmitAsync(heartbeat);
       await Task.Delay(_configService.CoreConfig.TickInterval, stoppingToken);
     }
   }
@@ -60,7 +66,8 @@ public class DnsUpdateRunner : IDnsUpdateRunner
     if (dnsEntries.Count == 0)
       return;
     
-    var builder = CreateMetricBuilder(nameof(UpdateDnsEntries));
+    var builder = new ServiceMetricBuilder(nameof(UpdateDnsEntries))
+      .WithDnsEntryCount(dnsEntries.Count);
 
     try
     {
@@ -68,7 +75,6 @@ public class DnsUpdateRunner : IDnsUpdateRunner
         ? "Updating 1 DNS entry"
         : $"Updating {dnsEntries.Count} DNS entries");
 
-      builder.WithCustomInt1(dnsEntries.Count);
       using (builder.WithTiming())
       {
         foreach (var dnsEntry in dnsEntries)
@@ -88,6 +94,4 @@ public class DnsUpdateRunner : IDnsUpdateRunner
       await _metrics.SubmitAsync(builder);
     }
   }
-  
-  private static ServiceMetricBuilder CreateMetricBuilder(string method) => new(nameof(DnsUpdateRunner), method);
 }
