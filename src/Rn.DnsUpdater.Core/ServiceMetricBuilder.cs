@@ -8,6 +8,7 @@ public sealed class ServiceMetricBuilder : BaseMetricBuilder<ServiceMetricBuilde
     : base("service_call")
   {
     SetSuccess(true);
+    AddAction(m => m.SetField("call_count", 1));
   }
 
   public ServiceMetricBuilder(string serviceName)
