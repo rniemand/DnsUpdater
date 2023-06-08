@@ -1,10 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Exceptions;
-using Rn.NetCore.BasicHttp;
-using Rn.NetCore.Common.Abstractions;
-using Rn.NetCore.Common.Extensions;
-using Rn.NetCore.Common.Logging;
+using RnCore.Abstractions;
+using RnCore.Abstractions.Extensions;
+using RnCore.Logging;
+using RnCore.Metrics.Extensions;
 
 namespace Rn.DnsUpdater.Core.Services;
 
@@ -16,7 +16,7 @@ public interface IHostIpAddressService
 public class HostIpAddressService : IHostIpAddressService
 {
   private readonly ILoggerAdapter<HostIpAddressService> _logger;
-  private readonly IBasicHttpService _httpService;
+  private readonly HttpClient _httpService;
   private readonly IDateTimeAbstraction _dateTime;
   private readonly DnsUpdaterConfig _config;
   private readonly string _providerUrl;
@@ -28,7 +28,7 @@ public class HostIpAddressService : IHostIpAddressService
   public HostIpAddressService(IServiceProvider serviceProvider)
   {
     _logger = serviceProvider.GetRequiredService<ILoggerAdapter<HostIpAddressService>>();
-    _httpService = serviceProvider.GetRequiredService<IBasicHttpService>();
+    _httpService = new HttpClient();
     _config = serviceProvider.GetRequiredService<DnsUpdaterConfig>();
     _dateTime = serviceProvider.GetRequiredService<IDateTimeAbstraction>();
 
@@ -46,8 +46,9 @@ public class HostIpAddressService : IHostIpAddressService
     if (_lastHostAddress.IgnoreCaseEquals(hostAddress))
       return false;
 
+    // TODO: [FALLBACK-TO] (HostIpAddressService.HostAddressChangedAsync) Replace fallback to call
     _logger.LogInformation("Host IP Address changed from '{old}' to '{new}'",
-      _lastHostAddress.FallbackTo("(none)"),
+      _lastHostAddress,
       hostAddress
     );
 
@@ -86,7 +87,7 @@ public class HostIpAddressService : IHostIpAddressService
       _httpTimeoutMs);
 
     var request = new HttpRequestMessage(HttpMethod.Get, _providerUrl);
-    var response = await _httpService.SendAsync(request, _httpTimeoutMs, stoppingToken);
+    var response = await _httpService.SendAsync(request, stoppingToken);
     var hostIpAddress = (await response.Content.ReadAsStringAsync(stoppingToken)).LowerTrim();
     
     if (!string.IsNullOrWhiteSpace(hostIpAddress))

@@ -2,12 +2,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rn.DnsUpdater.Core.Config;
 using Rn.DnsUpdater.Core.Services;
-using Rn.NetCore.BasicHttp;
-using Rn.NetCore.Common.Abstractions;
-using Rn.NetCore.Common.Helpers;
-using Rn.NetCore.Common.Logging;
-using Rn.NetCore.Metrics.Extensions;
-using Rn.NetCore.Metrics.Rabbit.Extensions;
+using RnCore.Abstractions;
+using RnCore.Logging;
+using RnCore.Metrics.Extensions;
+using RnCore.Metrics.InfluxDb;
 
 namespace Rn.DnsUpdater.Core.Extensions;
 
@@ -27,9 +25,6 @@ public static class ServiceCollectionExtensions
       .AddSingleton(GenerateConfig(configuration))
       .AddSingleton(configuration)
 
-      // Factories
-      .AddSingleton<IHttpClientFactory, HttpClientFactory>()
-
       // Helpers
       .AddSingleton<IJsonHelper, JsonHelper>()
 
@@ -40,12 +35,11 @@ public static class ServiceCollectionExtensions
       .AddSingleton<IDnsUpdateRunner, DnsUpdateRunner>()
 
       // Metrics
-      .AddRnMetricsBase(configuration)
-      .AddRnMetricRabbitMQ()
+      .AddRnCoreMetrics()
+      .AddInfluxDbMetricOutput()
 
       // Services
       .AddSingleton<IHostIpAddressService, HostIpAddressService>()
-      .AddSingleton<IBasicHttpService, BasicHttpService>()
       .AddSingleton<IDnsUpdaterService, DnsUpdaterService>()
       .AddSingleton<IConfigService, ConfigService>();
   }
