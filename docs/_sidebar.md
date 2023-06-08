@@ -4,3 +4,6 @@
 - [DnsUpdaterEntry](./configuration/DnsUpdaterEntry.md)
 - **Enums**
 - [DnsType](./enums/DnsType.md)
+- **Misc.**
+- [Technology](./technology.md)
+- [Docker](./docker.md)
